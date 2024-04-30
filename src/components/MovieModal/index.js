@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import ReactStars from "react-stars";
 import { Cross1Icon, PlayIcon } from "@radix-ui/react-icons";
+import { baseUrl } from "../../API/constants";
 import Row from "../Row";
 import styles from "./MovieModal.css";
 

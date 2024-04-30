@@ -2,6 +2,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import requests from "../API/requests";
 import "./App.css";
 import Banner from "./Banner";
 import Nav from "./Nav";
@@ -68,26 +69,31 @@ const App = () => {
       <Row
         title="영화달 베스트"
         id="DP"
+        fetchUrl={requests.fetchDQsPick}
         addRating={addRating}
       />
       <Row
         title="액션"
         id="AM"
+        fetchUrl={requests.fetchActionMovies}
         addRating={addRating}
       />
       <Row
         title="코미디"
         id="CM"
+        fetchUrl={requests.fetchComedyMovies}
         addRating={addRating}
       />
       <Row
         title="공포"
         id="HM"
+        fetchUrl={requests.fetchHorrorMovies}
         addRating={addRating}
       />
       <Row
         title="로맨스/멜로"
         id="RM"
+        fetchUrl={requests.fetchRomanceMovies}
         addRating={addRating}
       />
     </div>
