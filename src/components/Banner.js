@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image"; // Next.js에서 이미지를 다루는 데 사용되는 Image 컴포넌트
 import { PlayIcon } from '@radix-ui/react-icons'
+import requests from "../API/requests";
 import styles from "./Banner.css";
 
 const Banner = () => {
@@ -12,7 +13,8 @@ const Banner = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch();
+      const res = await fetch(`${requests.fetchDQsPick}`);
+      // const res = await fetch(`/api${requests.fetchDQsPick}`);
       const data = await res.json();
       const randomIndex = Math.floor(Math.random() * data.result.length);
       setMovie(data.result[randomIndex]);
