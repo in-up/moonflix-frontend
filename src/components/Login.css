@@ -1,0 +1,128 @@
+/* 전체 페이지 스타일 */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: url('/images/background_login.png') no-repeat center center fixed; 
+    background-size: cover;
+  }
+  
+  /* 로고 스타일 */
+  .logo {
+    display: block;
+    width: 250px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    padding-top: 50px;
+  }
+  
+  /* 로그인 컨테이너 스타일 */
+  .login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .login-container {
+    padding: 20px;
+    width: 350px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .input-group {
+    display: flex;
+    margin-bottom: 10px;
+  }
+  
+  .input-label, input[type="email"], input[type="password"] {
+    width: 55%;
+  }
+  
+  .input-label {
+    background-color: #f0e68c;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    padding: 10px;
+    width: 50%;
+    margin-right: 1%; /* 간격 유지 */
+    box-shadow: 0px 2px 5px 0px black;
+  }
+
+  .input-label>h3{
+    font-weight: 500;
+    text-align: left;
+    padding: 0;
+    margin-left: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  input[type="email"], input[type="password"] {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    background-color: #f0e68c;
+    border: 2px solid #f5da9c;
+    box-shadow: 0px 2px 5px 0px black;
+  }
+  
+  .button-Login {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    background-color: #395a7a;
+    color: #f1f3f5;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px 0px black;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .button-SignUp {
+    width: 30%;
+    padding: 3px;
+    margin-top: 20px;
+    background-color: #8097a6;
+    color: #f1f3f5;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0px 2px 5px 0px black;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  button:hover {
+    opacity: 0.8;
+  }
+  
+  button:hover {
+    opacity: 0.8;
+  }
+  
+  .message {
+    color: #ffffff;
+    background-color: #333333;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+  .session-status {
+    color: green;
+    background-color: #ccffcc;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
+
+  .message, .session-status {
+    cursor: pointer;
+  }
+  
