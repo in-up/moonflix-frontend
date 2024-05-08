@@ -43,7 +43,8 @@ const MovieModal = ({
                   alt={title}
                   width={200}
                   height={300}
-                  objectFit="cover"
+                  style={{objectFit:"cover"}}
+                  
                 />
                 <div className={styles.modalInfo}>
                   <p className={styles.modalDetails}>
