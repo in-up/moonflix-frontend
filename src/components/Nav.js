@@ -25,7 +25,7 @@ const Nav = () => {
     <nav className={`${styles.nav} ${show && styles.nav__black}`}>
       <Image
         alt="moviemoon logo"
-        src="/logo.png"
+        src="/images/moon_logo5.png"
         width={100}
         height={50}
         className={styles.nav__logo}

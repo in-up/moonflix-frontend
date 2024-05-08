@@ -8,8 +8,8 @@ h2 {
 }
 .slider{
   position: relative;
-
 }
+
 .slider__arrow-left{
   background-clip: content-box;
   padding: 20px 0;
@@ -70,16 +70,19 @@ h2 {
 
 }
 
+
 .row__posters {
   display: flex;
-  overflow-y: hidden;
   overflow-x: scroll;
+  overflow-y: hidden;
   padding: 20px 0 20px 20px;
   scroll-behavior: smooth;
 }
+
 .row__posters::-webkit-scrollbar {
   display: none;
 }
+
 .row__poster {
   object-fit: contain;
   width: 100%;

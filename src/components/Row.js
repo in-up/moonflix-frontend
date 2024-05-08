@@ -14,8 +14,8 @@ const Row = ({ title, fetchUrl, id, addRating }) => {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch(`${fetchUrl}`);
-      // const res = await fetch(`/api${fetchUrl}`);
+      // const res = await fetch(`${fetchUrl}`);
+      const res = await fetch(`/api${fetchUrl}`);
       const data = await res.json();
       setMovies(data.result);
     }
@@ -49,12 +49,13 @@ const Row = ({ title, fetchUrl, id, addRating }) => {
         <div ref={rowRef} id={id} className={styles.row__posters}>
           {movies.map((movie, idx) => (
             <div key={idx} className={styles.row__poster} onClick={() => handleClick(movie)}>
+              {console.log(movie.title)}
               <Image
                 src={`${base_url}${movie.poster_path}`}
                 alt={movie.title}
                 width={200}
                 height={300}
-                objectFit="cover"
+                style={{objectFit:"cover"}}
                 loading="lazy"
               />
             </div>
@@ -66,13 +67,13 @@ const Row = ({ title, fetchUrl, id, addRating }) => {
           </span>
         </div>
       </div>
-      {modalVisibility && (
+      {/* {modalVisibility && (
         <MovieModal
           {...movieSelected}
           setModalVisibility={setModalVisibility}
           addRating={addRating}
         />
-      )}
+      )} */}
     </section>
   );
 };

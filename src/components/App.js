@@ -11,6 +11,26 @@ import Row from "./Row";
 const App = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  // const [personalizeUrl, setPersonalizeUrl] = useState("/all");
+  // const [myRating, setMyRating] = useState([]);
+
+  // const addRating = (rating) => {
+  //   const updatedRatings = [...myRating, rating];
+  //   setMyRating(updatedRatings);
+  //   const userBasedParams = updatedRatings.join("&params=");
+  //   const url = `/user-based/?params=${userBasedParams}`;
+  //   setPersonalizeUrl(url);
+  // };
+
+  // useEffect(() => {
+  //   if (myRating.length > 0) {
+  //     const userBasedParams = myRating.join("&params=");
+  //     const url = `/user-based/?params=${userBasedParams}`;
+  //     setPersonalizeUrl(url);
+  //   }
+  //   console.log(personalizeUrl);
+  // }, [myRating, personalizeUrl]);
+
   const [personalizeUrl, setPersonalizeUrl] = useState("/all");
   const [myRating, setMyRating] = useState([]);
 
@@ -18,45 +38,25 @@ const App = () => {
     const updatedRatings = [...myRating, rating];
     setMyRating(updatedRatings);
     const userBasedParams = updatedRatings.join("&params=");
-    const url = `/user-based/?params=${userBasedParams}`;
+    const url = `/api/user-based/?params=${userBasedParams}`;
     setPersonalizeUrl(url);
   };
 
   useEffect(() => {
     if (myRating.length > 0) {
       const userBasedParams = myRating.join("&params=");
-      const url = `/user-based/?params=${userBasedParams}`;
+      const url = `/api/user-based/?params=${userBasedParams}`;
       setPersonalizeUrl(url);
     }
     console.log(personalizeUrl);
   }, [myRating, personalizeUrl]);
-
-  // const [personalizeUrl, setPersonalizeUrl] = useState("/api/all");
-  // const [myRating, setMyRating] = useState([]);
-
-  // const addRating = (rating) => {
-  //   const updatedRatings = [...myRating, rating];
-  //   setMyRating(updatedRatings);
-  //   const userBasedParams = updatedRatings.join("&params=");
-  //   const url = `/api/user-based/?params=${userBasedParams}`;
-  //   setPersonalizeUrl(url);
-  // };
-
-  // useEffect(() => {
-  //   if (myRating.length > 0) {
-  //     const userBasedParams = myRating.join("&params=");
-  //     const url = `/api/user-based/?params=${userBasedParams}`;
-  //     setPersonalizeUrl(url);
-  //   }
-  //   console.log(personalizeUrl);
-  // }, [myRating, personalizeUrl]);
 
   return (
     <div className="app">
       {/* NAV */}
       <Nav />
       {/* BANNER */}
-      <Banner />
+      {/* <Banner /> */}
 
       <Row
         title="당신을 위한 추천"
@@ -72,7 +72,7 @@ const App = () => {
         fetchUrl={requests.fetchDQsPick}
         addRating={addRating}
       />
-      <Row
+      {/* <Row
         title="액션"
         id="AM"
         fetchUrl={requests.fetchActionMovies}
@@ -95,7 +95,7 @@ const App = () => {
         id="RM"
         fetchUrl={requests.fetchRomanceMovies}
         addRating={addRating}
-      />
+      /> */}
     </div>
   );
 };

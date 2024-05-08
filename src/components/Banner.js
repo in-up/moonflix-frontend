@@ -13,8 +13,8 @@ const Banner = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch(`${requests.fetchDQsPick}`);
-      // const res = await fetch(`/api${requests.fetchDQsPick}`);
+      // const res = await fetch(`${requests.fetchDQsPick}`);
+      const res = await fetch(`/api${requests.fetchDQsPick}`);
       const data = await res.json();
       const randomIndex = Math.floor(Math.random() * data.result.length);
       setMovie(data.result[randomIndex]);
