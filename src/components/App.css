@@ -6,9 +6,9 @@ body, html {
   background-size: cover;
 }
 
-* {
+/* * {
   margin: 0;
-}
+} */
 
 .app {
   /* background: #111; */

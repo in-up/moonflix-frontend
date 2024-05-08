@@ -1,8 +1,14 @@
-import { useRef, useEffect, useState } from "react";
-import Image from "next/image";
-import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
-import MovieModal from "./MovieModal";
-import styles from "./Row.css";
+import { useEffect, useState } from "react";
+import SwiperCore, { Navigation } from "swiper";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/scrollbar";
+import styles from "./Row.css"; // CSS 모듈로 변경
+import Poster from "./Poster"; // 파일 확장자 수정
+import CustomSwiper from "./CustomSwiper";
+
+SwiperCore.use([Navigation]); // Navigation 모듈 사용
 
 const Row = ({ title, fetchUrl, id, addRating }) => {
   const base_url = "https://image.tmdb.org/t/p/original/";
@@ -10,11 +16,8 @@ const Row = ({ title, fetchUrl, id, addRating }) => {
   const [modalVisibility, setModalVisibility] = useState(false);
   const [movieSelected, setMovieSelection] = useState({});
 
-  const rowRef = useRef(null);
-
   useEffect(() => {
     async function fetchData() {
-      // const res = await fetch(`${fetchUrl}`);
       const res = await fetch(`/api${fetchUrl}`);
       const data = await res.json();
       setMovies(data.result);
@@ -28,44 +31,28 @@ const Row = ({ title, fetchUrl, id, addRating }) => {
     setMovieSelection(movie);
   };
 
-  const handleScroll = (direction) => {
-    const scrollDistance = rowRef.current.offsetWidth - 80;
-    if (direction === "left") {
-      rowRef.current.scrollLeft -= scrollDistance;
-    } else if (direction === "right") {
-      rowRef.current.scrollLeft += scrollDistance;
-    }
-  };
-
   return (
     <section className={styles.row}>
       <h2>{title}</h2>
       <div className={styles.slider}>
-        <div className={styles.slider__arrowLeft} onClick={() => handleScroll("left")}>
-          <span className={styles.arrow}>
-            <ArrowLeftIcon />
-          </span>
-        </div>
-        <div ref={rowRef} id={id} className={styles.row__posters}>
+        <Swiper
+          spaceBetween={30}
+          slidesPerView={5}
+          autoplay={true}
+          loop={true}
+          navigation={true} // Navigation 활성화
+        >
           {movies.map((movie, idx) => (
-            <div key={idx} className={styles.row__poster} onClick={() => handleClick(movie)}>
-              {console.log(movie.title)}
-              <Image
-                src={`${base_url}${movie.poster_path}`}
+            <SwiperSlide key={idx} className={styles.row__poster} onClick={() => handleClick(movie)}>
+              <Poster
+                path={`${base_url}${movie.poster_path}`}
                 alt={movie.title}
                 width={200}
                 height={300}
-                style={{objectFit:"cover"}}
-                loading="lazy"
               />
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
-        <div className={styles.slider__arrowRight} onClick={() => handleScroll("right")}>
-          <span className={styles.arrow}>
-            <ArrowRightIcon />
-          </span>
-        </div>
+        </Swiper>
       </div>
       {/* {modalVisibility && (
         <MovieModal
