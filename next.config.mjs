@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    swcMinify: true,
+    compiler: {
+      swcMinify: true,
+      styledComponents: true,
+    },
     redirects: async () => ([{
         source: '/api/:path*',
         destination: 'http:localhost:8000/:path*',
@@ -8,7 +13,8 @@ const nextConfig = {
     images: {
         domains: ["image.tmdb.org"],
     }
-};
-
-export default nextConfig;
-
+  };
+  
+  export default nextConfig;
+  
+  
