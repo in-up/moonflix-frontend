@@ -4,9 +4,10 @@ import styled from "styled-components";
 // 스타일링
 const Container = styled.div`
   color: white;
+  padding: 3rem;
 `;
 
-const HomePage = () => {
+const Page3 = () => {
   return (
     <Container>
       <h1>내 보관함</h1>
@@ -15,4 +16,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Page3;

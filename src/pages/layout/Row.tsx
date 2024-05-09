@@ -1,21 +1,14 @@
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from 'swiper';
+import 'swiper/css';
 import Poster from "./Poster";
 import styled from "styled-components";
-import { Autoplay, Navigation, Pagination, Scrollbar } from "swiper/modules";
-import 'swiper/css'; // Swiper의 CSS 파일을 import합니다.
-import 'swiper/css/navigation'; // Swiper의 navigation 스타일을 import합니다.
-import 'swiper/css/scrollbar'; // Swiper의 scrollbar 스타일을 import합니다.
 
-// SwiperCore 모듈 사용 설정
-SwiperCore.use([Navigation, Scrollbar, Pagination, Autoplay]);
 
 interface Movie {
   id: number;
   title: string;
   poster_path: string;
-  // Add other properties as needed
 }
 
 interface RowProps {
@@ -26,12 +19,12 @@ interface RowProps {
 }
 
 const RowWrapper = styled.section`
-  margin-left: 20px;
   color: white;
 `;
 
 const RowTitle = styled.h2`
-  padding-left: 20px;
+  font-size: 1.75rem;
+  padding-left: 3rem;
   color: white;
 `;
 
@@ -85,7 +78,6 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
   }, [fetchUrl]);
 
   const handleClick = (movie: Movie) => {
-    // Handle click event
   };
 
   return (
@@ -93,13 +85,13 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
       <RowTitle>{title}</RowTitle>
       <Slider>
         <Swiper
+          style={{ padding: "2rem" }}
           direction="horizontal"
-          spaceBetween={10}
-          slidesPerView={5}
-          autoplay={false}
+          spaceBetween={30}
+          slidesPerView={8}
+          autoplay={true}
           loop={true}
           navigation={true}
-          modules={[ Pagination, Scrollbar, Navigation, Autoplay ]}
         >
           {movies.map((movie, idx) => (
             <SwiperSlide key={idx}>
