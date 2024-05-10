@@ -84,14 +84,14 @@ const BannerButton = styled.button`
   i {
     padding: 0rem 0.5rem;
     transition: transform 0.3s ease; /* 아이콘에 트랜지션 적용 */
-    transform: translateX(-5px);
+    transform: translateX(-3px);
   }
 
   &:hover {
     transform: scale(1.08);
 
     i {
-      transform: translateX(7px); /* 호버링 시 아이콘을 오른쪽으로 이동 */
+      transform: translateX(3px); /* 호버링 시 아이콘을 오른쪽으로 이동 */
     }
   }
   @media (max-width: 768px) {
