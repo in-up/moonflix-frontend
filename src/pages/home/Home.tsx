@@ -37,7 +37,6 @@ const App: React.FC = () => {
         <title>{pageTitle}</title>
       </Head>
       <Header setCurrentPage={setCurrentPage} />
-      {/* 선택된 페이지 렌더링 */}
       {renderPage()}
     </Main>
   );

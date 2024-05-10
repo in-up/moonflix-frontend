@@ -49,7 +49,7 @@ const ProfileImageContainer = styled.div`
   height: 40px;
   border-radius: 50%;
   margin-left: 2rem;
-  background-image: url('/profile.png'); /* 프로필 이미지 경로 */
+  background-image: url('/profile.png');
   background-size: cover;
   cursor: pointer;
   transition: transform 0.3s;
@@ -57,22 +57,24 @@ const ProfileImageContainer = styled.div`
   &:hover {
     transform: scale(1.08);
   }
+  @media screen and (max-width: 768px) {
+    margin-left: 0.5rem;
+  }
 `;
 
 interface ProfileMenuProps {
   open: boolean;
-  setOpen: (open: boolean) => void; // setOpen 함수를 추가
+  setOpen: (open: boolean) => void;
 }
 
 export const ProfileMenu: React.FC<ProfileMenuProps> = ({ open, setOpen }) => {
   const handleLogout = () => {
-    // 로그아웃 처리
-    setOpen(false); // 메뉴를 닫습니다.
+    setOpen(false);
   };
 
   return (
     <div>
-      <ProfileImageContainer onClick={() => setOpen(!open)} /> {/* 클릭하면 메뉴를 열거나 닫습니다. */}
+      <ProfileImageContainer onClick={() => setOpen(!open)} />
       <MenuContainer open={open}>
         <MenuItem onClick={handleLogout}>아무개 님</MenuItem>
         <MenuItem onClick={handleLogout}>로그아웃</MenuItem>

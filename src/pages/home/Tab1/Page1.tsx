@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"; // useRouter import 추가
 import React, { useEffect, useState } from "react";
 import requests from "../../../apis/requests";
-import Banner from "../../layout/Banner";
+import Banner from "./Banner";
 import Row from "../../layout/Row";
 
 const Page1: React.FC = () => {
@@ -36,7 +36,7 @@ const Page1: React.FC = () => {
     <div className="app">
       {/* NAV */}
       {/* BANNER */}
-      {/* <Banner /> */}
+      <Banner />
 
       <Row
         title="당신을 위한 추천"

@@ -5,13 +5,15 @@ import { ProfileMenu } from "./ProfileMenu";
 import { slate, grayDark } from "@radix-ui/colors";
 import RiIcon from "./RiIcon";
 
-// 스타일링
 const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2.5rem;
   background-color: ${grayDark};
+  @media screen and (max-width: 768px) {
+    padding: 1rem 1rem;
+  }
 `;
 
 const RightSection = styled.div`
@@ -38,6 +40,12 @@ const RightSection = styled.div`
   button.active {
     color: ${slate.slate1};
     text-shadow: 0px 4px 15px rgba(255, 255, 255, 0.3); 
+  }
+
+  @media screen and (max-width: 768px) {
+    button {
+      display: none;
+    }
   }
 `;
 

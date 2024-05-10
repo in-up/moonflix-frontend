@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-// 스타일링
 const Container = styled.div`
   color: white;
   padding: 3rem;
