@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
+import Link from "next/link"; // Next.js의 Link 컴포넌트 추가
 
 const fadeIn = keyframes`
   from {
@@ -42,6 +43,12 @@ const MenuItem = styled.div`
   &:hover {
     background-color: #f0f0f0;
   }
+
+  /* 링크 스타일 */
+  a {
+    color: inherit; /* 부모 요소에서 상속한 색상 사용 */
+    text-decoration: none; /* 밑줄 제거 */
+  }
 `;
 
 const ProfileImageContainer = styled.div`
@@ -68,7 +75,7 @@ interface ProfileMenuProps {
 }
 
 export const ProfileMenu: React.FC<ProfileMenuProps> = ({ open, setOpen }) => {
-  const handleLogout = () => {
+  const handleSign = () => {
     setOpen(false);
   };
 
@@ -76,8 +83,17 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ open, setOpen }) => {
     <div>
       <ProfileImageContainer onClick={() => setOpen(!open)} />
       <MenuContainer open={open}>
-        <MenuItem onClick={handleLogout}>아무개 님</MenuItem>
-        <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
+        {/* Link를 MenuItem 안에 넣어서 클릭 시 이동할 주소를 지정할 수 있습니다. */}
+        <MenuItem onClick={handleSign}>
+          <Link href="/Sign">
+            아무개 님
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={handleSign}>
+          <Link href="/Sign">
+            로그인
+          </Link>
+        </MenuItem>
       </MenuContainer>
     </div>
   );

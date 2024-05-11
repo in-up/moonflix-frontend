@@ -34,8 +34,6 @@ const Page1: React.FC = () => {
 
   return (
     <div className="app">
-      {/* NAV */}
-      {/* BANNER */}
       <Banner />
 
       <Row
