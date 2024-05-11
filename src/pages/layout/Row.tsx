@@ -5,7 +5,7 @@ import Poster from "./Poster";
 import styled from "styled-components";
 
 interface Movie {
-  id: number;
+  tmdbId: number;
   title: string;
   poster_path: string;
 }
@@ -104,8 +104,9 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
 
   const handleClick = (movie: Movie) => {
     // Handle click logic here
-  };
 
+  };
+  console.log(movies);
   return (
     <RowWrapper>
       <RowTitle>{title}</RowTitle>
@@ -123,6 +124,8 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
             <SwiperSlide key={idx}>
               <RowPoster className="row__poster" onClick={() => handleClick(movie)}>
                 <Poster
+                  
+                  id= {movie.tmdbId}
                   path={`${base_url}${movie.poster_path}`}
                   alt={movie.title}
                   width={imgWidth}

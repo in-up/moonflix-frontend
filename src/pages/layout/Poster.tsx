@@ -1,8 +1,15 @@
 import React from "react";
 import Image from "next/image";
 import styled, { keyframes } from "styled-components";
+import { useRouter } from 'next/router';
+
+interface NavigationButtonProps {
+  destination: string;
+  label: string;
+}
 
 interface PosterProps {
+  id: number;
   path: string;
   alt: string;
   width: number;
@@ -27,10 +34,19 @@ const PosterImage = styled(Image)`
   transition: border-color 0.3s ease;
   &:hover {
     border-color: #fff;
+
   }
 `;
 
-const Poster: React.FC<PosterProps> = ({ path, alt, width, height }) => {
+const Poster: React.FC<PosterProps> = ({ id, path, alt, width, height }) => {
+  const router = useRouter();
+
+  const handleClick = (movieId: number) => {
+    console.log(movieId);
+    router.push('/movie/' + movieId);
+  };
+
+
   return (
     <PosterImage
       src={path}
@@ -39,6 +55,7 @@ const Poster: React.FC<PosterProps> = ({ path, alt, width, height }) => {
       height={height}
       style={{ objectFit: "cover" }}
       priority={true}
+      onClick={() => handleClick(id)}
     />
   );
 };
