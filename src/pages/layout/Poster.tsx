@@ -9,7 +9,6 @@ interface PosterProps {
   height: number;
 }
 
-// 테두리 애니메이션 정의
 const borderAnimation = keyframes`
   from {
     border-color: #ffffff00;
@@ -25,9 +24,9 @@ const PosterImage = styled(Image)`
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.3);
   border: 3px solid #ffffff00;
   padding: 0.25rem;
-  transition: border-color 0.3s ease; /* 테두리 애니메이션 */
+  transition: border-color 0.3s ease;
   &:hover {
-    border-color: #fff; /* 호버링 시 테두리 색상 변경 */
+    border-color: #fff;
   }
 `;
 

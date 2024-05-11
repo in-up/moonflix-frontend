@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const Container = styled.div`
   color: white;
+  padding: 3rem;
 `;
 
 const Page2 = () => {

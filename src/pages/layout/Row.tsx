@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 import Poster from "./Poster";
 import styled from "styled-components";
-
 
 interface Movie {
   id: number;
   title: string;
   poster_path: string;
-  // Add other properties as needed
 }
 
 interface RowProps {
@@ -19,12 +18,12 @@ interface RowProps {
 }
 
 const RowWrapper = styled.section`
-  margin-left: 20px;
   color: white;
 `;
 
 const RowTitle = styled.h2`
-  padding-left: 20px;
+  font-size: 1.75rem;
+  padding-left: 3rem;
   color: white;
 `;
 
@@ -41,7 +40,6 @@ const RowPosters = styled.div`
 const RowPoster = styled.div`
   flex-shrink: 0;
   width: 200px;
-  max-height: 300px;
   margin-right: 10px;
   transition: transform 450ms;
   border-radius: 4px;
@@ -62,6 +60,9 @@ const RowPoster = styled.div`
 const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
   const base_url = "https://image.tmdb.org/t/p/original/";
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [slidesPerView, setSlidesPerView] = useState(4);
+  const [imgWidth, setImgWidth] = useState(200); // Default width
+  const [imgHeight, setImgHeight] = useState(300); // Default height
 
   useEffect(() => {
     async function fetchData() {
@@ -77,8 +78,32 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
     fetchData();
   }, [fetchUrl]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== "undefined") { // Check if window object is available
+        const newImgWidth = window.innerWidth <= 768 ? 150 : 200;
+        const newImgHeight = window.innerWidth <= 768 ? 225 : 300;
+        setImgWidth(newImgWidth);
+        setImgHeight(newImgHeight);
+
+        const slideWidth = newImgWidth;
+        const spaceBetween = 30;
+        const screenWidth = window.innerWidth;
+        const slidesPerView = Math.floor(screenWidth / (slideWidth + spaceBetween));
+        setSlidesPerView(slidesPerView);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const handleClick = (movie: Movie) => {
-    // Handle click event
+    // Handle click logic here
   };
 
   return (
@@ -86,9 +111,10 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
       <RowTitle>{title}</RowTitle>
       <Slider>
         <Swiper
+          style={{ padding: "1rem 2rem" }}
           direction="horizontal"
           spaceBetween={30}
-          slidesPerView={5}
+          slidesPerView={slidesPerView}
           autoplay={true}
           loop={true}
           navigation={true}
@@ -99,8 +125,8 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
                 <Poster
                   path={`${base_url}${movie.poster_path}`}
                   alt={movie.title}
-                  width={200}
-                  height={300}
+                  width={imgWidth}
+                  height={imgHeight}
                 />
               </RowPoster>
             </SwiperSlide>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
+import Link from "next/link"; // Next.js의 Link 컴포넌트 추가
 
 const fadeIn = keyframes`
   from {
@@ -42,6 +43,12 @@ const MenuItem = styled.div`
   &:hover {
     background-color: #f0f0f0;
   }
+
+  /* 링크 스타일 */
+  a {
+    color: inherit; /* 부모 요소에서 상속한 색상 사용 */
+    text-decoration: none; /* 밑줄 제거 */
+  }
 `;
 
 const ProfileImageContainer = styled.div`
@@ -49,7 +56,7 @@ const ProfileImageContainer = styled.div`
   height: 40px;
   border-radius: 50%;
   margin-left: 2rem;
-  background-image: url('/profile.png'); /* 프로필 이미지 경로 */
+  background-image: url('/profile.png');
   background-size: cover;
   cursor: pointer;
   transition: transform 0.3s;
@@ -57,25 +64,36 @@ const ProfileImageContainer = styled.div`
   &:hover {
     transform: scale(1.08);
   }
+  @media screen and (max-width: 768px) {
+    margin-left: 0.5rem;
+  }
 `;
 
 interface ProfileMenuProps {
   open: boolean;
-  setOpen: (open: boolean) => void; // setOpen 함수를 추가
+  setOpen: (open: boolean) => void;
 }
 
 export const ProfileMenu: React.FC<ProfileMenuProps> = ({ open, setOpen }) => {
-  const handleLogout = () => {
-    // 로그아웃 처리
-    setOpen(false); // 메뉴를 닫습니다.
+  const handleSign = () => {
+    setOpen(false);
   };
 
   return (
     <div>
-      <ProfileImageContainer onClick={() => setOpen(!open)} /> {/* 클릭하면 메뉴를 열거나 닫습니다. */}
+      <ProfileImageContainer onClick={() => setOpen(!open)} />
       <MenuContainer open={open}>
-        <MenuItem onClick={handleLogout}>아무개 님</MenuItem>
-        <MenuItem onClick={handleLogout}>로그아웃</MenuItem>
+        {/* Link를 MenuItem 안에 넣어서 클릭 시 이동할 주소를 지정할 수 있습니다. */}
+        <MenuItem onClick={handleSign}>
+          <Link href="/Sign">
+            아무개 님
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={handleSign}>
+          <Link href="/Sign">
+            로그인
+          </Link>
+        </MenuItem>
       </MenuContainer>
     </div>
   );
