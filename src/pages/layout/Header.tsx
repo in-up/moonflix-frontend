@@ -8,13 +8,13 @@ import RiIcon from "./RiIcon";
 const Container = styled.div`
   position: fixed;
   top: 0;
-  width: calc(100% - 5rem); /* 수정된 부분 */
+  width: calc(100% - 5rem);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2.5rem;
   background-color: ${grayDark};
-  z-index: 1000; /* 위에 떠있게 함 */
+  z-index: 1000;
   @media screen and (max-width: 768px) {
     padding: 1rem 1rem;
     width: calc(100% - 2rem);
