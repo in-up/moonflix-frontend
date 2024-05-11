@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import Head from 'next/head';
 import styled from "styled-components";
 import Header from "../layout/Header";
-import Page1 from "./tab-1/Page1";
-import Page2 from "./tab-2/Page2";
-import Page3 from "./tab-3/Page3";
+import Page1 from "./tab1/Page1";
+import Page2 from "./tab2/Page2";
+import Page3 from "./tab3/Page3";
 
 const Main = styled.main`
   position: relative;
