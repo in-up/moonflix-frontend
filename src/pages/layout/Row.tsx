@@ -106,7 +106,7 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
     // Handle click logic here
 
   };
-  console.log(movies);
+  
   return (
     <RowWrapper>
       <RowTitle>{title}</RowTitle>

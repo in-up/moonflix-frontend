@@ -18,12 +18,69 @@ const Main = styled.main`
   font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   margin-top: 6rem;
   color: white;
+  display: flex;
+`;
+
+
+
+const Container = styled.div`
+  display: flex;
+  height: 100%;
+`;
+
+const LeftContainer = styled.div`
+  width: 20%;
+  height: 100%;
+  filter: blur(10px); /* 블러 처리 */
+`;
+
+const RightContainer = styled.div`
+  width: 20%;
+  height: 100%;
+  background-color: rgb();
+  filter: blur(10px); /* 블러 처리 */
+`;
+
+const MiddleContainer = styled.div`
+  width: 60%;
+  height: 100%;
+`;
+
+const MovieTitle = styled.h1`
+  font-size: 2.75rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  color: white;
+  margin-bottom: 0;
+`;
+
+const Overview = styled.p`
+  font-size: 1rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  color: white;
+  padding-bottom: 2rem;
+`;
+
+const Detail = styled.p`
+  font-size: 0.8rem;
+  padding-right: 3rem;
+  padding-left: 3rem;
+  color: white;
+  padding-top: 0.5rem;
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.2); /* 흰색의 20% 투명도 배경색 */
+  margin: 1rem 0; /* 위아래 여백 */
 `;
 
 interface MovieInfo {
   id: number;
   title: string;
-  director: string;
+  overview: string;
   year: number;
   backdrop_path: string;
 }
@@ -54,7 +111,7 @@ const Movie: React.FC = () => {
         const movieData: MovieInfo = {
           id: data.id,
           title: data.title,
-          director: data.director, // Assuming TMDB API provides director information
+          overview: data.overview, // Assuming TMDB API provides director information
           year: new Date(data.release_date).getFullYear(),
           backdrop_path: data.backdrop_path,
         };
@@ -69,32 +126,41 @@ const Movie: React.FC = () => {
     }
   }, [id]);
 
+  console.log(movie);
   if (!movie) {
     return <p>Loading...</p>;
   }
 
   return (
-    <Main>
+    <>
       <Head>
         <title>{pageTitle}</title>
       </Head>
       <Header setCurrentPage={setCurrentPage} />
-      <Backdrop
-        path={movie.backdrop_path}
-      />
-
-      <div>
-        <h1>{movie.title}</h1>
-        <p>Director: {movie.director}</p>
-        <p>Year: {movie.year}</p>
-
-        <Credits
-          tmdbId={tmdbId}
-        />
-
-
-      </div>
-    </Main>
+      <Main>
+        <LeftContainer>
+          {/* 왼쪽 컨테이너에 들어갈 블러 처리 요소 */}
+        </LeftContainer>
+        <MiddleContainer>
+          <Backdrop
+            path={movie.backdrop_path}
+          />
+          <div>
+            <MovieTitle>{movie.title}</MovieTitle>
+            <Detail>Year: {movie.year}</Detail>
+            <Divider />
+            <Overview>{movie.overview}</Overview>
+            <Divider />
+            <Credits
+              tmdbId={tmdbId}
+            />
+          </div>
+        </MiddleContainer>
+        <RightContainer>
+          {/* 오른쪽 컨테이너에 들어갈 블러 처리 요소 */}
+        </RightContainer>
+      </Main>
+    </>
   );
 };
 
