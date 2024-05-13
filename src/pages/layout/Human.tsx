@@ -21,6 +21,7 @@ const borderAnimation = keyframes`
   }
 `;
 
+
 const HumanImage = styled(Image)`
   border-radius: 14px;
   overflow: hidden;
