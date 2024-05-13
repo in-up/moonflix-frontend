@@ -9,6 +9,16 @@ import styled from "styled-components";
 import Header from "../layout/Header";
 import Backdrop from './Backdrop';
 import Credits from './Credits';
+import Rating from '../layout/Rating';
+
+interface MovieInfo {
+  id: number;
+  title: string;
+  overview: string;
+  year: number;
+  backdrop_path: string;
+  vote_average: number;
+}
 
 const Main = styled.main`
   position: relative;
@@ -22,18 +32,14 @@ const Main = styled.main`
 `;
 
 
-
-const Container = styled.div`
-  display: flex;
-  height: 100%;
-`;
-
+//좌측
 const LeftContainer = styled.div`
   width: 20%;
   height: 100%;
   filter: blur(10px); /* 블러 처리 */
 `;
 
+//우측
 const RightContainer = styled.div`
   width: 20%;
   height: 100%;
@@ -41,6 +47,7 @@ const RightContainer = styled.div`
   filter: blur(10px); /* 블러 처리 */
 `;
 
+// 중앙 & 메인
 const MiddleContainer = styled.div`
   width: 60%;
   height: 100%;
@@ -54,6 +61,7 @@ const MovieTitle = styled.h1`
   margin-bottom: 0;
 `;
 
+// 년도처럼 제목보다 작게 들어가는 녀석들
 const Overview = styled.p`
   font-size: 1rem;
   padding-left: 3rem;
@@ -61,7 +69,7 @@ const Overview = styled.p`
   color: white;
   padding-bottom: 2rem;
 `;
-
+// 줄거리 및 글씨가 많이 들어가는 부분
 const Detail = styled.p`
   font-size: 0.8rem;
   padding-right: 3rem;
@@ -77,13 +85,15 @@ const Divider = styled.div`
   margin: 1rem 0; /* 위아래 여백 */
 `;
 
-interface MovieInfo {
-  id: number;
-  title: string;
-  overview: string;
-  year: number;
-  backdrop_path: string;
-}
+const RatingBox = styled.div`
+  padding-left: 3rem;
+  display: flex;
+`;
+
+const RatingWord = styled.div`
+  margin-right: 0.7rem;
+`;
+
 
 const apikey = 'YOUR_TMDB_API_KEY';
 
@@ -100,6 +110,7 @@ const Movie: React.FC = () => {
   const { id } = router.query;
   const [movie, setMovie] = useState<MovieInfo | null>(null);
   const tmdbId = typeof id === 'string' ? parseInt(id, 10) : -1; // 문자열 id를 number로 변환
+  const personalizeUrl = "user-based/?params=";
 
 
   useEffect(() => {
@@ -114,6 +125,7 @@ const Movie: React.FC = () => {
           overview: data.overview, // Assuming TMDB API provides director information
           year: new Date(data.release_date).getFullYear(),
           backdrop_path: data.backdrop_path,
+          vote_average: data.vote_average,
         };
         setMovie(movieData);
       } catch (error) {
@@ -130,7 +142,7 @@ const Movie: React.FC = () => {
   if (!movie) {
     return <p>Loading...</p>;
   }
-
+  console.log(personalizeUrl+id);
   return (
     <>
       <Head>
@@ -146,8 +158,17 @@ const Movie: React.FC = () => {
             path={movie.backdrop_path}
           />
           <div>
-            <MovieTitle>{movie.title}</MovieTitle>
-            <Detail>Year: {movie.year}</Detail>
+            <MovieTitle>{movie.title} ({movie.year})</MovieTitle>
+            <RatingBox>
+              <RatingWord>
+                영화
+                <br />
+                평점
+              </RatingWord>
+              <div>
+                <Rating rating={movie.vote_average} size={30} />
+              </div>
+            </RatingBox>
             <Divider />
             <Overview>{movie.overview}</Overview>
             <Divider />

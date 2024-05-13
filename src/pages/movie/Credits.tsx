@@ -1,9 +1,8 @@
-// components/Credits.tsx
-
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import 'swiper/css/navigation';
 import styled from "styled-components";
 import Human from '../layout/Human';
 
@@ -12,6 +11,7 @@ interface Actor {
     name: string;
     profile_path: string | null;
     known_for_department: string;
+    popularity: number;
 }
 
 interface Crew {
@@ -19,12 +19,12 @@ interface Crew {
     name: string;
     profile_path: string | null;
     known_for_department: string;
+    popularity: number;
 }
 
 interface CreditsProps {
     tmdbId: number;
 }
-
 
 const CreditTitle = styled.h2`
   font-size: 1.75rem;
@@ -39,7 +39,6 @@ const RowHuman = styled.div`
   transition: transform 450ms;
   border-radius: 4px;
   text-align: center;
-
 
   &:hover {
     transform: scale(1.08);
@@ -62,21 +61,26 @@ const Slider = styled.div`
 const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
     const base_url = "https://image.tmdb.org/t/p/original";
     const no_image = '/images/no_image_icon.png';
-    //Actor and Director array
+
     const [actor, setActor] = useState<Actor[]>([]);
     const [crew, setCrew] = useState<Crew[]>([]);
-
-    const [slidesPerView, setSlidesPerView] = useState(4);
-    const [imgWidth, setImgWidth] = useState(200); // Default width
-    const [imgHeight, setImgHeight] = useState(300); // Default height
+    const [actorSlidesPerView, setActorSlidesPerView] = useState(4);
+    const [crewSlidesPerView, setCrewSlidesPerView] = useState(4);
+    const [imgWidth, setImgWidth] = useState(200);
+    const [imgHeight, setImgHeight] = useState(300);
 
     useEffect(() => {
         const fetchCredits = async () => {
             try {
                 const response = await axios.get(`https://api.themoviedb.org/3/movie/${tmdbId}/credits?api_key=${process.env.TMDB_API_KEY}`);
                 const data = response.data;
-                setActor(data.cast);
-                setCrew(data.crew);
+                const filteredActors = data.cast.filter((actor: Actor) => actor.known_for_department === "Acting");
+                const sortedActors = filteredActors.sort((a: Actor, b: Actor) => b.popularity - a.popularity);
+                setActor(sortedActors);
+
+                const filteredCrew = data.crew.filter((crew: Crew) => crew.known_for_department === "Directing");
+                const sortedCrew = filteredCrew.sort((a: Crew, b: Crew) => b.popularity - a.popularity);
+                setCrew(sortedCrew);
             } catch (error) {
                 console.error('Error fetching credits:', error);
             }
@@ -85,23 +89,31 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
         fetchCredits();
     }, [tmdbId]);
 
-
-
-
-
     useEffect(() => {
         const handleResize = () => {
-            if (typeof window !== "undefined") { // Check if window object is available
-                const newImgWidth = window.innerWidth <= 768 ? 150 : 200;
-                const newImgHeight = window.innerWidth <= 768 ? 225 : 300;
+            if (typeof window !== "undefined") {
+                const newImgWidth = window.innerWidth * 0.6 <= 768 ? 150 : 200;
+                const newImgHeight = window.innerWidth * 0.6 <= 768 ? 225 : 300;
                 setImgWidth(newImgWidth);
                 setImgHeight(newImgHeight);
-
                 const slideWidth = newImgWidth;
                 const spaceBetween = 30;
                 const screenWidth = window.innerWidth;
-                const slidesPerView = Math.floor(screenWidth * 0.6 / (slideWidth + spaceBetween));
-                setSlidesPerView(slidesPerView);
+                const ActorSlidesPerView = Math.floor(screenWidth * 0.6 / (slideWidth + spaceBetween));
+                const CrewSlidesPerView = Math.floor(screenWidth * 0.6 / (slideWidth + spaceBetween));
+
+                if (actor.length < 6 && window.innerWidth * 0.6 > 1080) {
+                    setActorSlidesPerView(5);
+                } else {
+                    setActorSlidesPerView(ActorSlidesPerView);
+                }
+
+
+                if (crew.length < 6 && window.innerWidth * 0.6 > 1080) {
+                    setCrewSlidesPerView(5);
+                } else {
+                    setCrewSlidesPerView(CrewSlidesPerView);
+                }
             }
         };
 
@@ -113,6 +125,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
         };
     }, []);
 
+
     return (
         <>
             <div>
@@ -122,14 +135,14 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                         style={{ padding: "1rem 2rem" }}
                         direction="horizontal"
                         spaceBetween={30}
-                        slidesPerView={slidesPerView}
+                        slidesPerView={actorSlidesPerView}
                         autoplay={true}
-                        loop={true}
+                        loop={false}
                         navigation={true}
                     >
-                        {actor.filter(actors => actors.known_for_department === "Acting").map(actors => (
-                            <SwiperSlide>
-                                <div key={actors.id}>
+                        {actor.map(actors => (
+                            <SwiperSlide key={actors.id}>
+                                <div>
                                     {actors.profile_path ? (
                                         <RowHuman>
                                             <Human
@@ -154,55 +167,58 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                     <p>{actors.name}</p>
                                 </div>
                             </SwiperSlide>
-
+                        ))}
+                        {Array.from({ length: Math.max(0, actorSlidesPerView - actor.length) }).map((_, index) => (
+                            <SwiperSlide key={`empty-${index}`} />
                         ))}
                     </Swiper>
                 </Slider>
             </div>
             <div>
                 <CreditTitle>감독</CreditTitle>
-                <Slider></Slider>
-                <Swiper
-                    style={{ padding: "1rem 2rem" }}
-                    direction="horizontal"
-                    spaceBetween={30}
-                    slidesPerView={slidesPerView}
-                    autoplay={true}
-                    loop={true}
-                    navigation={true}
-                >
-                    {crew.filter(crews => crews.known_for_department === "Directing").map(director => (
-                        <SwiperSlide>
-                            <div key={director.id}>
-                                {director.profile_path ? (
-                                    <RowHuman>
-                                        <Human
-                                            id={director.id}
-                                            path={`${base_url}${director.profile_path}`}
-                                            alt={director.name}
-                                            width={imgWidth}
-                                            height={imgHeight}
-                                        />
-                                    </RowHuman>
-
-                                ) : (
-                                    <RowHuman>
-                                        <Human
-                                            id={director.id}
-                                            path={`${no_image}`}
-                                            alt={director.name}
-                                            width={imgWidth}
-                                            height={imgHeight}
-                                        />
-                                    </RowHuman>
-
-                                )}
-                                <p>{director.name}</p>
-                            </div>
-                        </SwiperSlide>
-
-                    ))}
-                </Swiper>
+                <Slider>
+                    <Swiper
+                        style={{ padding: "1rem 2rem" }}
+                        direction="horizontal"
+                        spaceBetween={30}
+                        slidesPerView={crewSlidesPerView}
+                        autoplay={true}
+                        loop={false}
+                        navigation={true}
+                    >
+                        {crew.map(director => (
+                            <SwiperSlide key={director.id}>
+                                <div>
+                                    {director.profile_path ? (
+                                        <RowHuman>
+                                            <Human
+                                                id={director.id}
+                                                path={`${base_url}${director.profile_path}`}
+                                                alt={director.name}
+                                                width={imgWidth}
+                                                height={imgHeight}
+                                            />
+                                        </RowHuman>
+                                    ) : (
+                                        <RowHuman>
+                                            <Human
+                                                id={director.id}
+                                                path={`${no_image}`}
+                                                alt={director.name}
+                                                width={imgWidth}
+                                                height={imgHeight}
+                                            />
+                                        </RowHuman>
+                                    )}
+                                    <p>{director.name}</p>
+                                </div>
+                            </SwiperSlide>
+                        ))}
+                        {Array.from({ length: Math.max(0, crewSlidesPerView - crew.length) }).map((_, index) => (
+                            <SwiperSlide key={`empty-${index}`} />
+                        ))}
+                    </Swiper>
+                </Slider>
             </div>
         </>
     );
