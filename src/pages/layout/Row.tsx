@@ -4,6 +4,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import Poster from "./Poster";
 import styled from "styled-components";
+import { slate } from "@radix-ui/colors";
 
 interface Movie {
   tmdbId: number;
@@ -31,6 +32,19 @@ const RowTitle = styled.h2`
 const Slider = styled.div`
   position: relative;
   display: flex;
+  .swiper-button-prev,
+  .swiper-button-next {
+    padding: 15px 5px;
+    border-radius: 20px;
+    color: ${slate.slate1} !important;
+    opacity: 0.7;
+  }
+
+  .swiper-button-prev:after,
+  .swiper-button-next:after {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+  }
 `;
 
 const RowPosters = styled.div`

@@ -28,11 +28,12 @@ const PosterImage = styled(Image)`
   border: 3px solid #ffffff00;
   padding: 0.25rem;
   transition: border-color 0.3s ease;
+  cursor: pointer;
   &:hover {
     border-color: #fff;
-
   }
 `;
+
 
 const Poster: React.FC<PosterProps> = ({ id, path, alt, width, height }) => {
   const router = useRouter();

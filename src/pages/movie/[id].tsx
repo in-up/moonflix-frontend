@@ -32,25 +32,35 @@ const Main = styled.main`
 `;
 
 
-//좌측
 const LeftContainer = styled.div`
   width: 20%;
   height: 100%;
   filter: blur(10px); /* 블러 처리 */
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
-//우측
 const RightContainer = styled.div`
   width: 20%;
   height: 100%;
   background-color: rgb();
   filter: blur(10px); /* 블러 처리 */
+
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `;
 
 // 중앙 & 메인
 const MiddleContainer = styled.div`
   width: 60%;
   height: 100%;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    margin: 0 0;
+  }
 `;
 
 const MovieTitle = styled.h1`
@@ -81,8 +91,8 @@ const Detail = styled.p`
 const Divider = styled.div`
   width: 100%;
   height: 2px;
-  background-color: rgba(255, 255, 255, 0.2); /* 흰색의 20% 투명도 배경색 */
-  margin: 1rem 0; /* 위아래 여백 */
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 1rem 0; 
 `;
 
 const RatingBox = styled.div`
@@ -151,7 +161,6 @@ const Movie: React.FC = () => {
       <Header setCurrentPage={setCurrentPage} />
       <Main>
         <LeftContainer>
-          {/* 왼쪽 컨테이너에 들어갈 블러 처리 요소 */}
         </LeftContainer>
         <MiddleContainer>
           <Backdrop
@@ -176,7 +185,6 @@ const Movie: React.FC = () => {
           </div>
         </MiddleContainer>
         <RightContainer>
-          {/* 오른쪽 컨테이너에 들어갈 블러 처리 요소 */}
         </RightContainer>
       </Main>
     </>
