@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import Logo from "./Logo";
 import { ProfileMenu } from "./ProfileMenu";
@@ -38,13 +39,13 @@ const RightSection = styled.div`
 
     &:hover {
       color: ${slate.slate1};
-      text-shadow: 0px 4px 15px rgba(255, 255, 255, 0.7); 
+      text-shadow: 0px 4px 15px rgba(255, 255, 255, 0.7);
     }
   }
 
   button.active {
     color: ${slate.slate1};
-    text-shadow: 0px 4px 15px rgba(255, 255, 255, 0.3); 
+    text-shadow: 0px 4px 15px rgba(255, 255, 255, 0.3);
   }
 
   @media screen and (max-width: 768px) {
@@ -62,6 +63,12 @@ const DropdownContainer = styled.div`
 const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({ setCurrentPage }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("tab1");
+  const router = useRouter(); 
+
+  const handleSearchButtonClick = () => {
+    setCurrentPage("home");
+    router.push("/search");
+  };
 
   return (
     <Container>
@@ -96,7 +103,7 @@ const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({ setCurre
         </button>
       </RightSection>
       <DropdownContainer>
-        <RiIcon className="ri-search-line" onClick={() => setCurrentPage("home")} />
+        <RiIcon className="ri-search-line" onClick={handleSearchButtonClick} />
         <RiIcon className="ri-inbox-line" onClick={() => setCurrentPage("page1")} />
         <ProfileMenu open={menuOpen} setOpen={setMenuOpen} />
       </DropdownContainer>
