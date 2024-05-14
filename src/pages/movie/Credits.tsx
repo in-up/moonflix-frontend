@@ -76,11 +76,27 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                 const data = response.data;
                 const filteredActors = data.cast.filter((actor: Actor) => actor.known_for_department === "Acting");
                 const sortedActors = filteredActors.sort((a: Actor, b: Actor) => b.popularity - a.popularity);
-                setActor(sortedActors);
+                const uniqueActorsMap = new Map<number, Actor>();
+
+                sortedActors.forEach((actor: Actor)=> {
+                    uniqueActorsMap.set(actor.id, actor);
+                });
+
+                const uniqueActors = Array.from(uniqueActorsMap.values());
+                setActor(uniqueActors);
 
                 const filteredCrew = data.crew.filter((crew: Crew) => crew.known_for_department === "Directing");
                 const sortedCrew = filteredCrew.sort((a: Crew, b: Crew) => b.popularity - a.popularity);
-                setCrew(sortedCrew);
+                const uniqueCrewsMap = new Map<number, Actor>();
+
+                sortedCrew.forEach((crew: Crew)=> {
+                    uniqueCrewsMap.set(crew.id, crew);
+                });
+
+                const uniqueCrews = Array.from(uniqueCrewsMap.values());
+                setCrew(uniqueCrews);
+                console.log(sortedCrew);
+                console.log(uniqueCrews);
             } catch (error) {
                 console.error('Error fetching credits:', error);
             }
