@@ -54,16 +54,16 @@ const MiddleContainer = styled.div`
 `;
 
 const MovieTitle = styled.h1`
-  font-size: 2.75rem;
+  font-size: 3.75rem;
   padding-left: 3rem;
   padding-right: 3rem;
   color: white;
-  margin-bottom: 0;
+  margin-bottom: 0.4rem;
 `;
 
 // 년도처럼 제목보다 작게 들어가는 녀석들
 const Overview = styled.p`
-  font-size: 1rem;
+  font-size: 1.3rem;
   padding-left: 3rem;
   padding-right: 3rem;
   color: white;
@@ -160,14 +160,12 @@ const Movie: React.FC = () => {
           <div>
             <MovieTitle>{movie.title} ({movie.year})</MovieTitle>
             <RatingBox>
+              <Rating rating={movie.vote_average} size={70} />
+            </RatingBox>
+            <RatingBox>
               <RatingWord>
-                영화
-                <br />
-                평점
+                평점 : {Math.round(movie.vote_average * 10)}%
               </RatingWord>
-              <div>
-                <Rating rating={movie.vote_average} size={30} />
-              </div>
             </RatingBox>
             <Divider />
             <Overview>{movie.overview}</Overview>
