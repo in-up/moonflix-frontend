@@ -74,8 +74,11 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
             try {
                 const response = await axios.get(`https://api.themoviedb.org/3/movie/${tmdbId}/credits?api_key=${process.env.TMDB_API_KEY}`);
                 const data = response.data;
+                //배우 정보 선별
                 const filteredActors = data.cast.filter((actor: Actor) => actor.known_for_department === "Acting");
+                //인기도순 정렬
                 const sortedActors = filteredActors.sort((a: Actor, b: Actor) => b.popularity - a.popularity);
+                //중복 데이터 제거
                 const uniqueActorsMap = new Map<number, Actor>();
 
                 sortedActors.forEach((actor: Actor)=> {
@@ -85,8 +88,11 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                 const uniqueActors = Array.from(uniqueActorsMap.values());
                 setActor(uniqueActors);
 
+                //감독 정보 선별
                 const filteredCrew = data.crew.filter((crew: Crew) => crew.known_for_department === "Directing");
+                //인기도순 정렬
                 const sortedCrew = filteredCrew.sort((a: Crew, b: Crew) => b.popularity - a.popularity);
+                //중복 데이터 제거
                 const uniqueCrewsMap = new Map<number, Actor>();
 
                 sortedCrew.forEach((crew: Crew)=> {
@@ -95,8 +101,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
 
                 const uniqueCrews = Array.from(uniqueCrewsMap.values());
                 setCrew(uniqueCrews);
-                console.log(sortedCrew);
-                console.log(uniqueCrews);
+
             } catch (error) {
                 console.error('Error fetching credits:', error);
             }
