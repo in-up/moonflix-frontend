@@ -85,12 +85,12 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ open, setOpen }) => {
       <MenuContainer open={open}>
         {/* Link를 MenuItem 안에 넣어서 클릭 시 이동할 주소를 지정할 수 있습니다. */}
         <MenuItem onClick={handleSign}>
-          <Link href="/Sign">
+          <Link href="/sign">
             아무개 님
           </Link>
         </MenuItem>
         <MenuItem onClick={handleSign}>
-          <Link href="/Sign">
+          <Link href="/sign">
             로그인
           </Link>
         </MenuItem>

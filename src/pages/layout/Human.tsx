@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 import { useRouter } from 'next/router';
 
 
-interface PosterProps {
+interface HumanProps {
   id: number;
   path: string;
   alt: string;
@@ -21,21 +21,20 @@ const borderAnimation = keyframes`
   }
 `;
 
-const PosterImage = styled(Image)`
+
+const HumanImage = styled(Image)`
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.3);
   border: 3px solid #ffffff00;
   padding: 0.25rem;
   transition: border-color 0.3s ease;
-  cursor: pointer;
-  &:hover {
+  /* &:hover {
     border-color: #fff;
-  }
+  } */
 `;
 
-
-const Poster: React.FC<PosterProps> = ({ id, path, alt, width, height }) => {
+const Human: React.FC<HumanProps> = ({ id, path, alt, width, height }) => {
   const router = useRouter();
 
   const handleClick = (movieId: number) => {
@@ -45,16 +44,17 @@ const Poster: React.FC<PosterProps> = ({ id, path, alt, width, height }) => {
 
 
   return (
-    <PosterImage
+
+    <HumanImage
       src={path}
       alt={alt}
       width={width}
       height={height}
       style={{ objectFit: "cover" }}
       priority={true}
-      onClick={() => handleClick(id)}
     />
+
   );
 };
 
-export default Poster;
+export default Human;

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
+import 'swiper/css/navigation';
 import Poster from "./Poster";
 import styled from "styled-components";
+import { slate } from "@radix-ui/colors";
 
 interface Movie {
-  id: number;
+  tmdbId: number;
   title: string;
   poster_path: string;
 }
@@ -30,6 +32,19 @@ const RowTitle = styled.h2`
 const Slider = styled.div`
   position: relative;
   display: flex;
+  .swiper-button-prev,
+  .swiper-button-next {
+    padding: 15px 5px;
+    border-radius: 20px;
+    color: ${slate.slate1} !important;
+    opacity: 0.7;
+  }
+
+  .swiper-button-prev:after,
+  .swiper-button-next:after {
+    font-size: 1.5rem !important;
+    font-weight: 600 !important;
+  }
 `;
 
 const RowPosters = styled.div`
@@ -104,8 +119,9 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
 
   const handleClick = (movie: Movie) => {
     // Handle click logic here
-  };
 
+  };
+  
   return (
     <RowWrapper>
       <RowTitle>{title}</RowTitle>
@@ -123,6 +139,8 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
             <SwiperSlide key={idx}>
               <RowPoster className="row__poster" onClick={() => handleClick(movie)}>
                 <Poster
+                  
+                  id= {movie.tmdbId}
                   path={`${base_url}${movie.poster_path}`}
                   alt={movie.title}
                   width={imgWidth}
