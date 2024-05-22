@@ -145,6 +145,7 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
                   alt={movie.title}
                   width={imgWidth}
                   height={imgHeight}
+                  isNoUse={false}
                 />
               </RowPoster>
             </SwiperSlide>

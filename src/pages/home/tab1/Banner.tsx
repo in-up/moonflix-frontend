@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import requests from "../../../apis/requests";
 import styled from "styled-components";
 import { slate } from "@radix-ui/colors";
+import { useRouter } from 'next/router';
 
 interface Movie {
+  movieId: number;
   title?: string;
   name?: string;
   original_name?: string;
@@ -102,6 +104,7 @@ const BannerButton = styled.button`
 
 const Banner: React.FC = () => {
   const [movie, setMovie] = useState<Movie>({});
+  const router = useRouter(); // useRouter 추가
 
   const truncate = (str: string, n: number) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
@@ -112,17 +115,24 @@ const Banner: React.FC = () => {
       const res = await fetch(`/api${requests.fetchDQsPick}`);
       const data = await res.json();
       const randomIndex = Math.floor(Math.random() * data.result.length);
+      console.log(data.result[randomIndex]); // 콘솔에 출력
       setMovie(data.result[randomIndex]);
     }
+    
     fetchData();
   }, []);
+
+  const handleClick = (movieId: number) => {
+    console.log(movieId);
+    router.push('/movie/' + movieId);
+  };
 
   return (
     <BannerWrapper imageUrl={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`}>
       <BannerContents>
         <BannerTitle>{movie?.title || movie?.name || movie?.original_name}</BannerTitle>
         <div className="banner__buttons">
-          <BannerButton>
+          <BannerButton onClick={() => handleClick(movie.movieId)}>
                 < i className="ri-arrow-right-line"></i>
                 &nbsp;자세히 보기
           </BannerButton>

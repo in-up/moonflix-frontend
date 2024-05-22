@@ -1,10 +1,9 @@
-// pages/search/index.tsx
-
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import styled from 'styled-components';
-import Header from '../layout/Header';
+import styled from "styled-components";
+import Header from "../layout/Header";
+import SearchResult from "./SearchResult"; // Corrected import path
 
 const Main = styled.main`
   position: relative;
@@ -39,13 +38,13 @@ const SearchInput = styled.input`
   background: transparent;
   border: none;
   color: white;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
   outline: none;
   width: 100%;
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.8);
   }
 `;
 
@@ -59,45 +58,66 @@ const SearchButton = styled.button`
   outline: none;
 `;
 
-const SearchPage: React.FC = () => {
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState('tab1');
+const ResultContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 60vw;
+  margin: 1rem 20vw;
+  @media (max-width: 768px) {
+    margin: 1rem;
+    max-width: 100vw;
+  }
+`;
+
+const SearchResultPage: React.FC = () => {
   const router = useRouter();
+  const { query } = router.query;
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [submittedSearchValue, setSubmittedSearchValue] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof query === "string") {
+      setSearchValue(query);
+      setSubmittedSearchValue(query);
+    } else if (Array.isArray(query) && query.length > 0) {
+      setSearchValue(query[0]);
+      setSubmittedSearchValue(query[0]);
+    }
+  }, [query]);
 
   const handleSearch = () => {
-    if (searchValue.trim()) {
-      router.push(`/search/${encodeURIComponent(searchValue.trim())}`);
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
+    if (searchValue) {
+      router.push(`/search/${encodeURIComponent(searchValue)}`);
+      setSubmittedSearchValue(searchValue);
     }
   };
 
   return (
     <>
       <Head>
-        <title>영화달 MOONFLIX - 검색</title>
+        <title>영화달 MOONFLIX - 검색 결과</title>
       </Head>
-      <Header setCurrentPage={setCurrentPage} />
+      <Header setCurrentPage={() => {}} /> {/* Replace with the actual implementation */}
       <Main>
         <SearchContainer>
           <SearchInput
             type="text"
-            placeholder="제목, 장르, 시리즈 검색"
+            placeholder="제목, 태그, 시리즈 검색"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            onKeyPress={handleKeyPress}
           />
           <SearchButton onClick={handleSearch}>
             <i className="ri-search-line"></i>
           </SearchButton>
         </SearchContainer>
+        <ResultContainer>
+          {submittedSearchValue && <SearchResult word={submittedSearchValue} />}
+        </ResultContainer>
       </Main>
     </>
   );
 };
 
-export default SearchPage;
+export default SearchResultPage;
