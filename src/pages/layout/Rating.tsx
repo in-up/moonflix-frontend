@@ -19,15 +19,15 @@ const Rating: React.FC<RatingProps> = ({ rating, size }) => {
         let result = '';
 
         if (rating > 8.0) {
-            ratingImage = 'star_100.png';
+            ratingImage = 'm5.png';
         } else if (rating > 7.0) {
-            ratingImage = 'star_90.png';
+            ratingImage = 'm4.png';
         } else if (rating > 6.0) {
-            ratingImage = 'star_80.png';
+            ratingImage = 'm3.png';
         } else if (rating > 4.0) {
-            ratingImage = 'star_70.png';
+            ratingImage = 'm2.png';
         } else if (rating > 2.0) {
-            ratingImage = 'star_60.png';
+            ratingImage = 'm1.png';
         }else {
             ratingImage = 'star_0.png'; // 기본적으로 no_rating 이미지를 반환하도록 설정
         }
