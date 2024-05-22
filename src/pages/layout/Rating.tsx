@@ -8,7 +8,7 @@ interface RatingProps {
 }
 
 const RatingImage = styled(Image)`
-    border-radius: 50%;
+    
     overflow: hidden;
 `;
 

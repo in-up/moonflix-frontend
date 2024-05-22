@@ -1,20 +1,20 @@
-// pages/search/index.tsx
-
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import styled from 'styled-components';
-import Header from '../layout/Header';
+import styled from "styled-components";
+import Header from "../layout/Header";
+import SearchResult from "./seachresult"; // Corrected import path
 
 const Main = styled.main`
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background-position: center;
+  margin-top: 5rem;
   font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 `;
 
@@ -25,6 +25,8 @@ const SearchContainer = styled.div`
   border-radius: 8px;
   padding: 8px 16px;
   margin-top: 20px;
+  width: 100%;
+  max-width: 600px; // This line ensures the max width
 `;
 
 const SearchInput = styled.input`
@@ -51,29 +53,46 @@ const SearchButton = styled.button`
   outline: none;
 `;
 
-const SearchPage: React.FC = () => {
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState('tab1');
+const ResultContainer = styled.div`
+  width: 100%;
+  max-width: 600px; // This line ensures the max width
+  padding-left: 3rem;
+  padding-right: 3rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const SearchResultPage: React.FC = () => {
   const router = useRouter();
+  const { query } = router.query;
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [submittedSearchValue, setSubmittedSearchValue] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof query === "string") {
+      setSearchValue(query);
+      setSubmittedSearchValue(query);
+    } else if (Array.isArray(query) && query.length > 0) {
+      setSearchValue(query[0]);
+      setSubmittedSearchValue(query[0]);
+    }
+  }, [query]);
 
   const handleSearch = () => {
-    if (searchValue.trim()) {
-      router.push(`/search/${encodeURIComponent(searchValue.trim())}`);
-    }
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
+    if (searchValue) {
+      router.push(`/search/${encodeURIComponent(searchValue)}`);
+      setSubmittedSearchValue(searchValue);
     }
   };
 
   return (
     <>
       <Head>
-        <title>영화달 MOONFLIX - 검색</title>
+        <title>영화달 MOONFLIX - 검색 결과</title>
       </Head>
-      <Header setCurrentPage={setCurrentPage} />
+      <Header setCurrentPage={() => {}} /> {/* Replace with the actual implementation */}
       <Main>
         <SearchContainer>
           <SearchInput
@@ -81,15 +100,17 @@ const SearchPage: React.FC = () => {
             placeholder="제목, 태그, 시리즈 검색"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            onKeyPress={handleKeyPress}
           />
           <SearchButton onClick={handleSearch}>
             <i className="ri-search-line"></i>
           </SearchButton>
         </SearchContainer>
+        <ResultContainer>
+          {submittedSearchValue && <SearchResult word={submittedSearchValue} />}
+        </ResultContainer>
       </Main>
     </>
   );
 };
 
-export default SearchPage;
+export default SearchResultPage;
