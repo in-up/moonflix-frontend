@@ -16,9 +16,9 @@ interface Movie {
 
 const NoResults = styled.div`
   text-align: center;
-  padding: 2rem;
   font-size: 1.5rem;
-  color: #666;
+  color: white;
+  margin: 1rem ;
 `;
 
 const Container = styled.div`
@@ -27,7 +27,7 @@ const Container = styled.div`
   align-items: center; // Center items horizontally
   justify-content: center; // Center items vertically
   width: 100%;
-  padding: 2rem;
+  margin: 0 1rem;
 `;
 
 const SearchResult: React.FC<searchProp> = ({ word }) => {
@@ -51,6 +51,7 @@ const SearchResult: React.FC<searchProp> = ({ word }) => {
 
   return (
     <Container>
+      {movies.length > 0 ? <NoResults>{movies.length}개의 결과를 찾았습니다.</NoResults> : <NoResults/>}
       {movies.length > 0 ? (
         movies.map((movie) => (
           <RowInfo

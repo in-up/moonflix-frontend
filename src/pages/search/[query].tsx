@@ -3,30 +3,35 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import styled from "styled-components";
 import Header from "../layout/Header";
-import SearchResult from "./seachresult"; // Corrected import path
+import SearchResult from "./SearchResult"; // Corrected import path
 
 const Main = styled.main`
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  top: 10rem;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   background-position: center;
-  margin-top: 5rem;
   font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  @media (max-width: 768px) {
+    top: 5rem;
+  }
 `;
 
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
   padding: 8px 16px;
-  margin-top: 20px;
-  width: 100%;
-  max-width: 600px; // This line ensures the max width
+  height: 2.5rem;
+  max-width: 60vw;
+  margin: 1rem 20vw;
+  @media (max-width: 768px) {
+    margin: 1rem;
+    max-width: 100vw;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -55,13 +60,15 @@ const SearchButton = styled.button`
 
 const ResultContainer = styled.div`
   width: 100%;
-  max-width: 600px; // This line ensures the max width
-  padding-left: 3rem;
-  padding-right: 3rem;
-  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 60vw;
+  margin: 1rem 20vw;
+  @media (max-width: 768px) {
+    margin: 1rem;
+    max-width: 100vw;
+  }
 `;
 
 const SearchResultPage: React.FC = () => {

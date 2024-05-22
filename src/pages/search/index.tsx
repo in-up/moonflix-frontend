@@ -10,34 +10,42 @@ const Main = styled.main`
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  top: 10rem;
   width: 100%;
   height: 100vh;
   background-position: center;
   font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  @media (max-width: 768px) {
+    top: 5rem;
+  }
 `;
 
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
   padding: 8px 16px;
-  margin-top: 20px;
+  height: 2.5rem;
+  max-width: 60vw;
+  margin: 1rem 20vw;
+  @media (max-width: 768px) {
+    margin: 1rem;
+    max-width: 100vw;
+  }
 `;
 
 const SearchInput = styled.input`
   background: transparent;
   border: none;
   color: white;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   outline: none;
   width: 100%;
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.6);
   }
 `;
 
@@ -78,7 +86,7 @@ const SearchPage: React.FC = () => {
         <SearchContainer>
           <SearchInput
             type="text"
-            placeholder="제목, 태그, 시리즈 검색"
+            placeholder="제목, 장르, 시리즈 검색"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             onKeyPress={handleKeyPress}

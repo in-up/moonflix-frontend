@@ -9,7 +9,7 @@ interface PosterProps {
   alt: string;
   width: number;
   height: number;
-  isNoUse?: boolean; // 변경된 prop 이름
+  isNoUse?: boolean;
 }
 
 const borderAnimation = keyframes`
@@ -45,7 +45,7 @@ const PosterImage = styled(Image).attrs<{ isNoUse?: boolean }>((props) => ({
       border: 1px solid #ffffff00;
       box-shadow: 0 0 0;
       &:hover {
-        border-color: none;
+        border-color: #00000000;
       }
     `}
 `;
@@ -67,7 +67,7 @@ const Poster: React.FC<PosterProps> = ({ id, path, alt, width, height, isNoUse =
       style={{ objectFit: "cover" }}
       priority={true}
       onClick={() => handleClick(id)}
-      isNoUse={isNoUse} // 변경된 prop
+      isNoUse={isNoUse}
     />
   );
 };
