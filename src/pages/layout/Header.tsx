@@ -6,7 +6,6 @@ import { ProfileMenu } from "./ProfileMenu";
 import { slate, blackA } from "@radix-ui/colors";
 import RiIcon from "./RiIcon";
 
-// Container 스타일 컴포넌트에 전달되는 props 타입 정의
 interface ContainerProps {
   scroll: boolean;
 }

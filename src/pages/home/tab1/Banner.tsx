@@ -124,7 +124,6 @@ const Banner: React.FC = () => {
       const res = await fetch(`/api${requests.fetchDQsPick}`);
       const data = await res.json();
       const randomIndex = Math.floor(Math.random() * data.result.length);
-      console.log(data.result[randomIndex]); // 콘솔에 출력
       setMovie(data.result[randomIndex]);
     }
     
@@ -132,7 +131,6 @@ const Banner: React.FC = () => {
   }, []);
 
   const handleClick = (movieId: number) => {
-    console.log(movieId);
     router.push('/movie/' + movieId);
   };
 

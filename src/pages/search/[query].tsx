@@ -30,7 +30,7 @@ const SearchContainer = styled.div`
   margin: 1rem 20vw;
   @media (max-width: 768px) {
     margin: 1rem;
-    max-width: 100vw;
+    max-width: 90vw;
   }
 `;
 
@@ -67,7 +67,7 @@ const ResultContainer = styled.div`
   margin: 1rem 20vw;
   @media (max-width: 768px) {
     margin: 1rem;
-    max-width: 100vw;
+    max-width: 90vw;
   }
 `;
 
@@ -88,9 +88,15 @@ const SearchResultPage: React.FC = () => {
   }, [query]);
 
   const handleSearch = () => {
-    if (searchValue) {
-      router.push(`/search/${encodeURIComponent(searchValue)}`);
+    if (searchValue.trim()) {
+      router.push(`/search/${encodeURIComponent(searchValue.trim())}`);
       setSubmittedSearchValue(searchValue);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -107,6 +113,7 @@ const SearchResultPage: React.FC = () => {
             placeholder="제목, 태그, 시리즈 검색"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
+            onKeyPress={handleKeyPress} // Added onKeyPress event
           />
           <SearchButton onClick={handleSearch}>
             <i className="ri-search-line"></i>
