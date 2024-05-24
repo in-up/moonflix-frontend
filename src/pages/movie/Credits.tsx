@@ -80,7 +80,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
     useEffect(() => {
         const fetchCredits = async () => {
             try {
-                const response = await axios.get(`https://api.themoviedb.org/3/movie/${tmdbId}/credits?api_key=${process.env.TMDB_API_KEY}`);
+                const response = await axios.get(`https://api.themoviedb.org/3/movie/${tmdbId}/credits?api_key=${process.env.TMDB_API_KEY}&language=ko-KR`);
                 const data = response.data;
                 //배우 정보 선별
                 const filteredActors = data.cast.filter((actor: Actor) => actor.known_for_department === "Acting");
