@@ -163,7 +163,7 @@ const CommentsContainer = styled.div`
 
 // 유저의 댓글 각각을 감싸는 컨테이너
 const UserCommentContainer = styled.div`
-  background: #f3f4f6;  // 라이트 그레이 배경
+  background-color: #78798c;  // 라이트 그레이 배경
   border-radius: 8px;  // 둥근 모서리
   margin-bottom: 10px;  // 각 댓글 사이의 마진
   padding: 10px;  // 내부 패딩
@@ -185,6 +185,7 @@ const CommentUser = styled.strong`
 `;
 
 const CommentContent = styled.p`
+  white-space: pre-wrap;
   color: #333;
 `;
 
@@ -276,16 +277,19 @@ const Movie: React.FC = () => {
   const displayRating = (rating: number) => {
     const stars = [];
     for (let i = 0; i < 5; i++) {
-      const step = i * 2;
-      if (rating >= step + 2) stars.push(fullMoon);
-      else if (rating === step + 1) stars.push(halfMoon);
-      else stars.push(newMoon);
+      if (rating >= (i + 1) * 2) {
+        stars.push(fullMoon);
+      } else if (rating === (i * 2) + 1) {
+        stars.push(halfMoon);
+      } else {
+        stars.push(newMoon);
+      }
     }
-    return stars;
+    return stars.join('');
   };
 
   const handleRatingClick = (index: number) => {
-    const newRating = index * 2 + (rating % 2 === 0 && rating === index * 2 ? 1 : 2);
+    const newRating = rating === (index * 2 + 1) ? (index + 1) * 2 : (index * 2 + 1);
     setRating(newRating);
   };
 
@@ -342,67 +346,70 @@ const Movie: React.FC = () => {
 
 
   
-  return (
-    <>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
-      <Header setCurrentPage={setCurrentPage} />
-      <Main>
-        <LeftContainer />
-        <MiddleContainer>
-          <Backdrop path={movie ? movie.backdrop_path : ''} />
-          <div>
-            <MovieTitle>{movie ? `${movie.title} (${movie.year})` : 'Loading...'}</MovieTitle>
-            <RatingBox>
-              <Rating rating={movie ? movie.vote_average : 0} size={70} />
-            </RatingBox>
-            <RatingBox>
-              <RatingWord>평점 : {movie ? Math.round(movie.vote_average * 10) : 0}%</RatingWord>
-            </RatingBox>
-            <Divider />
-            <Overview>{movie ? movie.overview : 'Loading...'}</Overview>
-            <Divider />
-            <Credits tmdbId={parseInt(id as string, 10)} />
-            
-            <CommentFormContainer onSubmit={handleCommentSubmit}>
-              <LoginStatusMessage>
-                {user ? `[${user.email ? user.email : 'Unknown'}]님 환영합니다. 평점을 남겨주세요!` : '로그인 후 이용해주세요'}
-              </LoginStatusMessage>
-              <RatingStars>
-                {displayRating(rating).map((star, index) => (
-                  <span key={index} onClick={() => handleRatingClick(index)}>
-                    {star}
-                  </span>
-                ))}
-              </RatingStars>
-              <CommentTextArea
-                value={comment}
-                onChange={e => setComment(e.target.value)}
-                placeholder="Leave a comment (Optional)"
-                rows={3}
-              />
-              <SubmitButton type="submit">남기기</SubmitButton>
-            </CommentFormContainer>
-            <CommentsContainer>
-          {comments.length > 0 ? (
-            comments.map(comment => (
-              <UserCommentContainer key={comment.id}>
-                <CommentUser>User: {comment.user_id}</CommentUser>
-                <CommentContent>Rating: {comment.rating} | {comment.comment}</CommentContent>
-                <CommentDate>{new Date(comment.created_at).toLocaleString()}</CommentDate>
-              </UserCommentContainer>
-            ))
-          ) : (
-            <p>No comments available</p>  // 메시지 표시
-          )}
-        </CommentsContainer>
-          </div>
-        </MiddleContainer>
-        <RightContainer />
-      </Main>
-    </>
-  );
+return (
+  <>
+    <Head>
+      <title>{pageTitle}</title>
+    </Head>
+    <Header setCurrentPage={setCurrentPage} />
+    <Main>
+      <LeftContainer />
+      <MiddleContainer>
+        <Backdrop path={movie ? movie.backdrop_path : ''} />
+        <div>
+          <MovieTitle>{movie ? `${movie.title} (${movie.year})` : 'Loading...'}</MovieTitle>
+          <RatingBox>
+            <Rating rating={movie ? movie.vote_average : 0} size={70} />
+          </RatingBox>
+          <RatingBox>
+            <RatingWord>평점 : {movie ? Math.round(movie.vote_average * 10) : 0}%</RatingWord>
+          </RatingBox>
+          <Divider />
+          <Overview>{movie ? movie.overview : 'Loading...'}</Overview>
+          <Divider />
+          <Credits tmdbId={parseInt(id as string, 10)} />
+
+          <CommentFormContainer onSubmit={handleCommentSubmit}>
+            <LoginStatusMessage>
+              {user ? `[${user.email ? user.email : 'Unknown'}]님 환영합니다. 평점을 남겨주세요!` : '로그인 후 이용해주세요'}
+            </LoginStatusMessage>
+            <RatingStars>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <span key={index} onClick={() => handleRatingClick(index)}>
+                  {index * 2 < rating ? (index * 2 + 1 === rating ? halfMoon : fullMoon) : newMoon}
+                </span>
+              ))}
+            </RatingStars>
+            <CommentTextArea
+              value={comment}
+              onChange={e => setComment(e.target.value)}
+              placeholder="Leave a comment (Optional)"
+              rows={3}
+            />
+            <SubmitButton type="submit">남기기</SubmitButton>
+          </CommentFormContainer>
+          <CommentsContainer>
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <UserCommentContainer key={comment.id}>
+                  <CommentUser>User: {comment.user_id}</CommentUser>
+                  <CommentContent>
+                    {displayRating(comment.rating)}
+                    <br />
+                    {comment.comment}
+                  </CommentContent>
+                </UserCommentContainer>
+              ))
+            ) : (
+              <p>No comments available</p> // 메시지 표시
+            )}
+          </CommentsContainer>
+        </div>
+      </MiddleContainer>
+      <RightContainer />
+    </Main>
+  </>
+);
 };
 
 export default Movie;
