@@ -45,11 +45,10 @@ const StyledContainer = styled.div`
 
 const Overview = styled.p`
   font-size: 1rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
+  padding: 2rem;
   color: white;
   padding-bottom: 2rem;
-  line-height: 1.5rem;
+  line-height: 1.875rem;
 `;
 
 const Divider = styled.div`

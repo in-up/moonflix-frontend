@@ -5,6 +5,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import styled from "styled-components";
 import Human from '../layout/Human';
+import { slate } from "@radix-ui/colors";
 
 interface Actor {
     id: number;
@@ -56,6 +57,13 @@ const RowHuman = styled.div`
 const Slider = styled.div`
   position: relative;
   display: flex;
+  .swiper-button-prev,
+  .swiper-button-next {
+    padding: 15px 5px;
+    border-radius: 20px;
+    color: ${slate.slate1} !important;
+    opacity: 0.7;
+  }
 `;
 
 const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
@@ -113,8 +121,8 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
     useEffect(() => {
         const handleResize = () => {
             if (typeof window !== "undefined") {
-                const newImgWidth = window.innerWidth * 0.6 <= 768 ? 150 : 200;
-                const newImgHeight = window.innerWidth * 0.6 <= 768 ? 225 : 300;
+                const newImgWidth = window.innerWidth * 0.6 <= 768 ? 120 : 150;
+                const newImgHeight = window.innerWidth * 0.6 <= 768 ? 180 : 200;
                 setImgWidth(newImgWidth);
                 setImgHeight(newImgHeight);
                 const slideWidth = newImgWidth;
@@ -150,7 +158,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
     return (
         <>
             <div>
-                <CreditTitle>배우</CreditTitle>
+                <CreditTitle>주연/조연</CreditTitle>
                 <Slider>
                     <Swiper
                         style={{ padding: "1rem 2rem" }}
@@ -196,7 +204,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                 </Slider>
             </div>
             <div>
-                <CreditTitle>감독</CreditTitle>
+                <CreditTitle>연출</CreditTitle>
                 <Slider>
                     <Swiper
                         style={{ padding: "1rem 2rem" }}
