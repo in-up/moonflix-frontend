@@ -23,11 +23,11 @@ interface MovieInfo {
 
 interface Comment {
   id: number;
-  userId: string; // 유저 식별 정보
+  user_id: string; // 유저 식별 정보
   movie_id: number; // 영화 ID
-  content: string; // 댓글 내용
+  comment: string; // 댓글 내용
   rating: number; // 별점 평가
-  createdAt: string; // 생성 시간
+  created_at: string; // 생성 시간
 }
 
 const Main = styled.main`
