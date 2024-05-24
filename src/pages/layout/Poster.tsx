@@ -56,7 +56,7 @@ const Poster: React.FC<PosterProps> = ({ id, movieTitle, path, alt, width, heigh
 
   const handleClick = (movieId: number, movieTitle: string) => {
     console.log(movieId);
-    router.push('/movie/' + movieId + '/' + movieTitle);
+    router.push('/movie/' + movieId);
   };
 
   return (

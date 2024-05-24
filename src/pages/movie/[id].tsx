@@ -11,6 +11,7 @@ import Backdrop from './Backdrop';
 import Credits from './Credits';
 import Rating from '../layout/Rating';
 import { slateDark } from "@radix-ui/colors";
+import Itembase from './Itembase';
 
 interface MovieInfo {
   id: number;
@@ -102,7 +103,7 @@ const Movie: React.FC = () => {
   const { id } = router.query;
   const [movie, setMovie] = useState<MovieInfo | null>(null);
   const tmdbId = typeof id === 'string' ? parseInt(id, 10) : -1; // 문자열 id를 number로 변환
-  const personalizeUrl = "user-based/?params=";
+  const [personalizeUrl, setPersonalizeUrl] = useState<string>('/item-based/'+id);
 
 
   useEffect(() => {
@@ -129,6 +130,11 @@ const Movie: React.FC = () => {
       fetchMovie();
     }
   }, [id]);
+
+  const addRating = (rating: number) => {
+    const url = `/item-based/${id}`;
+    setPersonalizeUrl(url);
+  };
 
   console.log(movie);
   if (!movie) {
@@ -165,6 +171,12 @@ const Movie: React.FC = () => {
             <Overview>{movie.overview}</Overview>
             <Credits
               tmdbId={tmdbId}
+            />
+            <Itembase
+            title="관련 영화"
+            id="about"
+            fetchUrl={personalizeUrl}
+            addRating={addRating}
             />
           </div>
         </StyledContainer>
