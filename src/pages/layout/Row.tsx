@@ -76,8 +76,8 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
   const base_url = "https://image.tmdb.org/t/p/original/";
   const [movies, setMovies] = useState<Movie[]>([]);
   const [slidesPerView, setSlidesPerView] = useState(4);
-  const [imgWidth, setImgWidth] = useState(200); // Default width
-  const [imgHeight, setImgHeight] = useState(300); // Default height
+  const [imgWidth, setImgWidth] = useState(200);
+  const [imgHeight, setImgHeight] = useState(300);
 
   useEffect(() => {
     async function fetchData() {

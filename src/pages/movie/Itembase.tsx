@@ -21,6 +21,7 @@ interface RowProps {
 
 const RowWrapper = styled.section`
   color: white;
+  margin: 2rem 0;
 `;
 
 const RowTitle = styled.h2`
@@ -58,6 +59,7 @@ const RowPoster = styled.div`
   margin-right: 10px;
   transition: transform 450ms;
   border-radius: 4px;
+  text-align: center;
 
   &:hover {
     transform: scale(1.08);
@@ -69,6 +71,18 @@ const RowPoster = styled.div`
 
   @media screen and (max-width: 768px) {
     max-height: 280px;
+  }
+
+  .poster-title {
+    margin: 1rem 0.75rem;
+    font-size: 1rem;
+    color: ${slate.slate1};
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 30vw;
   }
 `;
 
@@ -120,7 +134,6 @@ const Itembase: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
 
   const handleClick = (movie: Movie) => {
     // Handle click logic here
-
   };
   
   return (
@@ -140,8 +153,7 @@ const Itembase: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
             <SwiperSlide key={idx}>
               <RowPoster className="row__poster" onClick={() => handleClick(movie)}>
                 <Poster
-                  
-                  id= {movie.tmdbId}
+                  id={movie.tmdbId}
                   movieTitle={movie.title}
                   path={`${base_url}${movie.poster_path}`}
                   alt={movie.title}
@@ -149,6 +161,7 @@ const Itembase: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
                   height={imgHeight}
                   isNoUse={false}
                 />
+                <div className="poster-title">{movie.title}</div>
               </RowPoster>
             </SwiperSlide>
           ))}

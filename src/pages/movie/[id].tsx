@@ -46,7 +46,7 @@ const StyledContainer = styled.div`
 
 const Overview = styled.p`
   font-size: 1rem;
-  padding: 2rem;
+  padding: 1rem;
   color: white;
   padding-bottom: 2rem;
   line-height: 1.875rem;
@@ -173,7 +173,7 @@ const Movie: React.FC = () => {
               tmdbId={tmdbId}
             />
             <Itembase
-            title="관련 영화"
+            title="비슷한 작품"
             id="about"
             fetchUrl={personalizeUrl}
             addRating={addRating}

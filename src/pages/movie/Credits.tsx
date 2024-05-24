@@ -68,7 +68,7 @@ const Slider = styled.div`
 
 const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
     const base_url = "https://image.tmdb.org/t/p/original";
-    const no_image = '/images/no_image_icon.png';
+    const no_image = '/placeholder.png';
 
     const [actor, setActor] = useState<Actor[]>([]);
     const [crew, setCrew] = useState<Crew[]>([]);
@@ -120,7 +120,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
 
     useEffect(() => {
         const handleResize = () => {
-            if (typeof window !== "undefined") {
+            if (typeof window !== "undefined") {        
                 const newImgWidth = window.innerWidth * 0.6 <= 768 ? 120 : 150;
                 const newImgHeight = window.innerWidth * 0.6 <= 768 ? 180 : 200;
                 setImgWidth(newImgWidth);
@@ -132,14 +132,14 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                 const CrewSlidesPerView = Math.floor(screenWidth * 0.6 / (slideWidth + spaceBetween));
 
                 if (actor.length < 6 && window.innerWidth * 0.6 > 1080) {
-                    setActorSlidesPerView(5);
+                    setActorSlidesPerView(6);
                 } else {
                     setActorSlidesPerView(ActorSlidesPerView);
                 }
 
 
                 if (crew.length < 6 && window.innerWidth * 0.6 > 1080) {
-                    setCrewSlidesPerView(5);
+                    setCrewSlidesPerView(6);
                 } else {
                     setCrewSlidesPerView(CrewSlidesPerView);
                 }
@@ -181,6 +181,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                                 width={imgWidth}
                                                 height={imgHeight}
                                             />
+                                        <div className="human-title">{actors.name}</div>
                                         </RowHuman>
                                     ) : (
                                         <RowHuman>
@@ -191,9 +192,9 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                                 width={imgWidth}
                                                 height={imgHeight}
                                             />
+                                        <div className="human-title">{actors.name}</div>
                                         </RowHuman>
                                     )}
-                                    <p>{actors.name}</p>
                                 </div>
                             </SwiperSlide>
                         ))}
@@ -227,6 +228,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                                 width={imgWidth}
                                                 height={imgHeight}
                                             />
+                                            <div className="human-title">{director.name}</div>
                                         </RowHuman>
                                     ) : (
                                         <RowHuman>
@@ -237,9 +239,9 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                                 width={imgWidth}
                                                 height={imgHeight}
                                             />
+                                            <div className="human-title">{director.name}</div>
                                         </RowHuman>
                                     )}
-                                    <p>{director.name}</p>
                                 </div>
                             </SwiperSlide>
                         ))}
