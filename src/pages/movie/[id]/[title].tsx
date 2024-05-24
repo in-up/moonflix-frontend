@@ -1,4 +1,4 @@
-// pages/movieinfo/[id]/[title].tsx
+// pages/movieinfo/[id].tsx
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import Header from "../../layout/Header";
 import Backdrop from '../Backdrop';
 import Credits from '../Credits';
 import Rating from '../../layout/Rating';
+import { slateDark } from "@radix-ui/colors";
 import Row from '../../layout/Row';
 
 interface MovieInfo {
@@ -30,30 +31,11 @@ const Main = styled.main`
   margin-top: 6rem;
   color: white;
   display: flex;
+  justify-content: center;
 `;
 
-const LeftContainer = styled.div`
-  width: 20%;
-  height: 100%;
-  filter: blur(10px);
-
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const RightContainer = styled.div`
-  width: 20%;
-  height: 100%;
-  background-color: rgb();
-  filter: blur(10px);
-
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const MiddleContainer = styled.div`
+// 중앙 & 메인
+const StyledContainer = styled.div`
   width: 60%;
   height: 100%;
   @media screen and (max-width: 768px) {
@@ -62,28 +44,12 @@ const MiddleContainer = styled.div`
   }
 `;
 
-const MovieTitle = styled.h1`
-  font-size: 3.75rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
-  color: white;
-  margin-bottom: 0.4rem;
-`;
-
 const Overview = styled.p`
-  font-size: 1.3rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
+  font-size: 1rem;
+  padding: 2rem;
   color: white;
   padding-bottom: 2rem;
-`;
-
-const Detail = styled.p`
-  font-size: 0.8rem;
-  padding-right: 3rem;
-  padding-left: 3rem;
-  color: white;
-  padding-top: 0.5rem;
+  line-height: 1.875rem;
 `;
 
 const Divider = styled.div`
@@ -93,88 +59,127 @@ const Divider = styled.div`
   margin: 1rem 0; 
 `;
 
-const RatingBox = styled.div`
-  padding-left: 3rem;
+const MovieInfo = styled.div`
+  margin: 1rem;
   display: flex;
+`
+
+const Box = styled.div`
+  background-color: ${slateDark.slate1};
+  border-radius: 16px;
+  border: #ffffff55 1px solid;
+  padding: 0.5rem;
+  margin: 0.25rem;
+  display: flex;
+  align-items: center;
+
+  div {
+    margin-left: 1rem;
+  }
 `;
+
+const BoxText = styled.div`
+  margin: 1rem;
+`;
+
 
 const RatingWord = styled.div`
   margin-right: 0.7rem;
 `;
 
+
+const apikey = 'YOUR_TMDB_API_KEY';
+
 const Movie: React.FC = () => {
+  //header 정보
+  const pageTitle = '영화달 MOONFLIX - 영화정보';
   const [currentPage, setCurrentPage] = useState("MovieInfo");
+  //페이지 상단 네비게이터
+
+  //api key
+  const apikey = process.env.TMDB_API_KEY;
+
   const router = useRouter();
   const { id, title } = router.query;
   const [movie, setMovie] = useState<MovieInfo | null>(null);
-  const tmdbId = typeof id === 'string' ? parseInt(id, 10) : -1;
-  const [personalizeUrl, setPersonalizeUrl] = useState<string>("");
+  const tmdbId = typeof id === 'string' ? parseInt(id, 10) : -1; // 문자열 id를 number로 변환
+  const [personalizeUrl, setPersonalizeUrl] = useState<string>('item-based/'+title);
+
 
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        const response = await axios.get(`${requests.fetchMovie}${id}?api_key=${requests.tmdbAPI}&language=ko-KR`);
+        const response = await axios.get(`${requests.fetchMovie}${id}?api_key=${apikey}&language=ko-KR`);
         const data = response.data;
+        console.log(response.data);
         const movieData: MovieInfo = {
           id: data.id,
           title: data.title,
-          overview: data.overview,
+          overview: data.overview, // Assuming TMDB API provides director information
           year: new Date(data.release_date).getFullYear(),
           backdrop_path: data.backdrop_path,
           vote_average: data.vote_average,
         };
         setMovie(movieData);
       } catch (error) {
-        console.error('영화 정보를 불러오는데 오류가 발생했습니다:', error);
+        console.error('Error fetching movie:', error);
       }
     };
 
     if (id) {
       fetchMovie();
-    //   setPersonalizeUrl(`/api/item-based/${MovieTitle}`);
     }
   }, [id]);
 
-  if (!movie) {
-    return <p>로딩 중...</p>;
-  }
-
   const addRating = (rating: number) => {
-    const url = `/api/item-based/${MovieTitle}`;
+    const url = `/item-based/${title}`;
     setPersonalizeUrl(url);
   };
 
+  console.log(movie);
+  if (!movie) {
+    return <p>Loading...</p>;
+  }
+  console.log(personalizeUrl+id);
   return (
     <>
       <Head>
-        <title>영화달 MOONFLIX - {movie.title}</title>
+        <title>{pageTitle}</title>
       </Head>
       <Header setCurrentPage={setCurrentPage} />
       <Main>
-        <LeftContainer />
-        <MiddleContainer>
-          <Backdrop path={movie.backdrop_path} />
+        <StyledContainer>
+          <Backdrop
+            path={movie.backdrop_path}
+            title={movie.title}
+            year={movie.year}
+          />
           <div>
-            <MovieTitle>{movie.title} ({movie.year})</MovieTitle>
-            <RatingBox>
-              <Rating rating={movie.vote_average} size={70} />
-            </RatingBox>
-            <RatingBox>
-              <RatingWord>평점 : {Math.round(movie.vote_average * 10)}%</RatingWord>
-            </RatingBox>
-            <Divider />
+            <MovieInfo>
+              <Box>
+                <div>
+                   <Rating rating={movie.vote_average} size={30} />
+                </div>
+                <BoxText>{Math.round(movie.vote_average * 10)}%의 사용자가 긍정적으로 평가했습니다!</BoxText>
+              </Box>
+            </MovieInfo>
+            {/* <MovieInfo>
+              <Box>
+                <BoxText>테스트</BoxText>
+              </Box>
+            </MovieInfo> */}
             <Overview>{movie.overview}</Overview>
-            <Divider />
-            <Credits tmdbId={tmdbId} />
+            <Credits
+              tmdbId={tmdbId}
+            />
             <Row
             title="관련 영화"
             id="about"
-            fetchUrl={`/item-based/${title}`}
+            fetchUrl={personalizeUrl}
             addRating={addRating}
             />
           </div>
-        </MiddleContainer>
-        <RightContainer />
+        </StyledContainer>
       </Main>
     </>
   );
