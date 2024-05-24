@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 interface PosterProps {
   id: number;
+  movieTitle: string;
   path: string;
   alt: string;
   width: number;
@@ -50,12 +51,12 @@ const PosterImage = styled(Image).attrs<{ isNoUse?: boolean }>((props) => ({
     `}
 `;
 
-const Poster: React.FC<PosterProps> = ({ id, path, alt, width, height, isNoUse = false }) => {
+const Poster: React.FC<PosterProps> = ({ id, movieTitle, path, alt, width, height, isNoUse = false }) => {
   const router = useRouter();
 
-  const handleClick = (movieId: number) => {
+  const handleClick = (movieId: number, movieTitle: string) => {
     console.log(movieId);
-    router.push('/movie/' + movieId);
+    router.push('/movie/' + movieId + '/' + movieTitle);
   };
 
   return (
@@ -66,7 +67,7 @@ const Poster: React.FC<PosterProps> = ({ id, path, alt, width, height, isNoUse =
       height={height}
       style={{ objectFit: "cover" }}
       priority={true}
-      onClick={() => handleClick(id)}
+      onClick={() => handleClick(id, movieTitle)}
       isNoUse={isNoUse}
     />
   );

@@ -141,6 +141,7 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
                 <Poster
                   
                   id= {movie.tmdbId}
+                  movieTitle={movie.title}
                   path={`${base_url}${movie.poster_path}`}
                   alt={movie.title}
                   width={imgWidth}
