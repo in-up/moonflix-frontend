@@ -10,6 +10,8 @@ import Header from "../layout/Header";
 import Backdrop from './Backdrop';
 import Credits from './Credits';
 import Rating from '../layout/Rating';
+import { slateDark } from "@radix-ui/colors";
+import Itembase from './Itembase';
 
 interface MovieInfo {
   id: number;
@@ -29,32 +31,11 @@ const Main = styled.main`
   margin-top: 6rem;
   color: white;
   display: flex;
-`;
-
-
-const LeftContainer = styled.div`
-  width: 20%;
-  height: 100%;
-  filter: blur(10px); /* 블러 처리 */
-
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const RightContainer = styled.div`
-  width: 20%;
-  height: 100%;
-  background-color: rgb();
-  filter: blur(10px); /* 블러 처리 */
-
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
+  justify-content: center;
 `;
 
 // 중앙 & 메인
-const MiddleContainer = styled.div`
+const StyledContainer = styled.div`
   width: 60%;
   height: 100%;
   @media screen and (max-width: 768px) {
@@ -63,29 +44,12 @@ const MiddleContainer = styled.div`
   }
 `;
 
-const MovieTitle = styled.h1`
-  font-size: 3.75rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
-  color: white;
-  margin-bottom: 0.4rem;
-`;
-
-// 년도처럼 제목보다 작게 들어가는 녀석들
 const Overview = styled.p`
-  font-size: 1.3rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
+  font-size: 1rem;
+  padding: 1rem;
   color: white;
   padding-bottom: 2rem;
-`;
-// 줄거리 및 글씨가 많이 들어가는 부분
-const Detail = styled.p`
-  font-size: 0.8rem;
-  padding-right: 3rem;
-  padding-left: 3rem;
-  color: white;
-  padding-top: 0.5rem;
+  line-height: 1.875rem;
 `;
 
 const Divider = styled.div`
@@ -95,10 +59,29 @@ const Divider = styled.div`
   margin: 1rem 0; 
 `;
 
-const RatingBox = styled.div`
-  padding-left: 3rem;
+const MovieInfo = styled.div`
+  margin: 1rem;
   display: flex;
+`
+
+const Box = styled.div`
+  background-color: ${slateDark.slate1};
+  border-radius: 16px;
+  border: #ffffff55 1px solid;
+  padding: 0.5rem;
+  margin: 0.25rem;
+  display: flex;
+  align-items: center;
+
+  div {
+    margin-left: 1rem;
+  }
 `;
+
+const BoxText = styled.div`
+  margin: 1rem;
+`;
+
 
 const RatingWord = styled.div`
   margin-right: 0.7rem;
@@ -120,7 +103,7 @@ const Movie: React.FC = () => {
   const { id } = router.query;
   const [movie, setMovie] = useState<MovieInfo | null>(null);
   const tmdbId = typeof id === 'string' ? parseInt(id, 10) : -1; // 문자열 id를 number로 변환
-  const personalizeUrl = "user-based/?params=";
+  const [personalizeUrl, setPersonalizeUrl] = useState<string>('/item-based/'+id);
 
 
   useEffect(() => {
@@ -148,6 +131,11 @@ const Movie: React.FC = () => {
     }
   }, [id]);
 
+  const addRating = (rating: number) => {
+    const url = `/item-based/${id}`;
+    setPersonalizeUrl(url);
+  };
+
   console.log(movie);
   if (!movie) {
     return <p>Loading...</p>;
@@ -160,32 +148,38 @@ const Movie: React.FC = () => {
       </Head>
       <Header setCurrentPage={setCurrentPage} />
       <Main>
-        <LeftContainer>
-        </LeftContainer>
-        <MiddleContainer>
+        <StyledContainer>
           <Backdrop
             path={movie.backdrop_path}
+            title={movie.title}
+            year={movie.year}
           />
           <div>
-            <MovieTitle>{movie.title} ({movie.year})</MovieTitle>
-            <RatingBox>
-              <Rating rating={movie.vote_average} size={70} />
-            </RatingBox>
-            <RatingBox>
-              <RatingWord>
-                평점 : {Math.round(movie.vote_average * 10)}%
-              </RatingWord>
-            </RatingBox>
-            <Divider />
+            <MovieInfo>
+              <Box>
+                <div>
+                   <Rating rating={movie.vote_average} size={30} />
+                </div>
+                <BoxText>{Math.round(movie.vote_average * 10)}%의 사용자가 긍정적으로 평가했습니다!</BoxText>
+              </Box>
+            </MovieInfo>
+            {/* <MovieInfo>
+              <Box>
+                <BoxText>테스트</BoxText>
+              </Box>
+            </MovieInfo> */}
             <Overview>{movie.overview}</Overview>
-            <Divider />
             <Credits
               tmdbId={tmdbId}
             />
+            <Itembase
+            title="비슷한 작품"
+            id="about"
+            fetchUrl={personalizeUrl}
+            addRating={addRating}
+            />
           </div>
-        </MiddleContainer>
-        <RightContainer>
-        </RightContainer>
+        </StyledContainer>
       </Main>
     </>
   );

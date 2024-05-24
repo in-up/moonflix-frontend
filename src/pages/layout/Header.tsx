@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import Logo from "./Logo";
 import { ProfileMenu } from "./ProfileMenu";
-import { slate, grayDark } from "@radix-ui/colors";
+import { slate, blackA } from "@radix-ui/colors";
 import RiIcon from "./RiIcon";
 
-const Container = styled.div`
+interface ContainerProps {
+  scroll: boolean;
+}
+
+const Container = styled.div<ContainerProps>`
   position: fixed;
   top: 0;
   width: calc(100% - 5rem);
@@ -14,8 +18,10 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2.5rem;
-  background-color: ${grayDark};
+  background-color: ${props => (props.scroll ? blackA.blackA9 : blackA.blackA1)};
+  transition: background-color 0.7s ease;
   z-index: 1000;
+
   @media screen and (max-width: 768px) {
     padding: 1rem 1rem;
     width: calc(100% - 2rem);
@@ -63,7 +69,23 @@ const DropdownContainer = styled.div`
 const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({ setCurrentPage }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("tab1");
+  const [scroll, setScroll] = useState(false);
   const router = useRouter(); 
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY >= 50) {
+        setScroll(true);
+      } else {
+        setScroll(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleSearchButtonClick = () => {
     setCurrentPage("home");
@@ -71,7 +93,7 @@ const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({ setCurre
   };
 
   return (
-    <Container>
+    <Container scroll={scroll}>
       <Logo />
       <RightSection>
         <button

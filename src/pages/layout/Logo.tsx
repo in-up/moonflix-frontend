@@ -6,11 +6,11 @@ import styled from "styled-components";
 const LogoContainer = styled.div`
   width: 120px;
   margin-left: 0.5rem;
-  transition: transform 0.3s ease;
+  transition: opacity 0.3s ease;
   transform: scale(1.1);
 
   &:hover {
-    transform: scale(1.2);
+    opacity: calc(0.9);
   }
 `;
 

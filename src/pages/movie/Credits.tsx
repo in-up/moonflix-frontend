@@ -5,6 +5,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import styled from "styled-components";
 import Human from '../layout/Human';
+import { slate } from "@radix-ui/colors";
 
 interface Actor {
     id: number;
@@ -56,11 +57,18 @@ const RowHuman = styled.div`
 const Slider = styled.div`
   position: relative;
   display: flex;
+  .swiper-button-prev,
+  .swiper-button-next {
+    padding: 15px 5px;
+    border-radius: 20px;
+    color: ${slate.slate1} !important;
+    opacity: 0.7;
+  }
 `;
 
 const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
     const base_url = "https://image.tmdb.org/t/p/original";
-    const no_image = '/images/no_image_icon.png';
+    const no_image = '/placeholder.png';
 
     const [actor, setActor] = useState<Actor[]>([]);
     const [crew, setCrew] = useState<Crew[]>([]);
@@ -72,7 +80,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
     useEffect(() => {
         const fetchCredits = async () => {
             try {
-                const response = await axios.get(`https://api.themoviedb.org/3/movie/${tmdbId}/credits?api_key=${process.env.TMDB_API_KEY}`);
+                const response = await axios.get(`https://api.themoviedb.org/3/movie/${tmdbId}/credits?api_key=${process.env.TMDB_API_KEY}&language=ko-KR`);
                 const data = response.data;
                 //배우 정보 선별
                 const filteredActors = data.cast.filter((actor: Actor) => actor.known_for_department === "Acting");
@@ -112,9 +120,9 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
 
     useEffect(() => {
         const handleResize = () => {
-            if (typeof window !== "undefined") {
-                const newImgWidth = window.innerWidth * 0.6 <= 768 ? 150 : 200;
-                const newImgHeight = window.innerWidth * 0.6 <= 768 ? 225 : 300;
+            if (typeof window !== "undefined") {        
+                const newImgWidth = window.innerWidth * 0.6 <= 768 ? 120 : 150;
+                const newImgHeight = window.innerWidth * 0.6 <= 768 ? 180 : 200;
                 setImgWidth(newImgWidth);
                 setImgHeight(newImgHeight);
                 const slideWidth = newImgWidth;
@@ -124,14 +132,14 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                 const CrewSlidesPerView = Math.floor(screenWidth * 0.6 / (slideWidth + spaceBetween));
 
                 if (actor.length < 6 && window.innerWidth * 0.6 > 1080) {
-                    setActorSlidesPerView(5);
+                    setActorSlidesPerView(6);
                 } else {
                     setActorSlidesPerView(ActorSlidesPerView);
                 }
 
 
                 if (crew.length < 6 && window.innerWidth * 0.6 > 1080) {
-                    setCrewSlidesPerView(5);
+                    setCrewSlidesPerView(6);
                 } else {
                     setCrewSlidesPerView(CrewSlidesPerView);
                 }
@@ -150,7 +158,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
     return (
         <>
             <div>
-                <CreditTitle>배우</CreditTitle>
+                <CreditTitle>주연/조연</CreditTitle>
                 <Slider>
                     <Swiper
                         style={{ padding: "1rem 2rem" }}
@@ -173,6 +181,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                                 width={imgWidth}
                                                 height={imgHeight}
                                             />
+                                        <div className="human-title">{actors.name}</div>
                                         </RowHuman>
                                     ) : (
                                         <RowHuman>
@@ -183,9 +192,9 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                                 width={imgWidth}
                                                 height={imgHeight}
                                             />
+                                        <div className="human-title">{actors.name}</div>
                                         </RowHuman>
                                     )}
-                                    <p>{actors.name}</p>
                                 </div>
                             </SwiperSlide>
                         ))}
@@ -196,7 +205,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                 </Slider>
             </div>
             <div>
-                <CreditTitle>감독</CreditTitle>
+                <CreditTitle>연출</CreditTitle>
                 <Slider>
                     <Swiper
                         style={{ padding: "1rem 2rem" }}
@@ -219,6 +228,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                                 width={imgWidth}
                                                 height={imgHeight}
                                             />
+                                            <div className="human-title">{director.name}</div>
                                         </RowHuman>
                                     ) : (
                                         <RowHuman>
@@ -229,9 +239,9 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                                 width={imgWidth}
                                                 height={imgHeight}
                                             />
+                                            <div className="human-title">{director.name}</div>
                                         </RowHuman>
                                     )}
-                                    <p>{director.name}</p>
                                 </div>
                             </SwiperSlide>
                         ))}

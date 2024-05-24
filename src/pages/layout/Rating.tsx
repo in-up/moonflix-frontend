@@ -14,7 +14,7 @@ const RatingImage = styled(Image)`
 
 const Rating: React.FC<RatingProps> = ({ rating, size }) => {
     const renderRatingImage = () => {
-        const baseUrl = '/images/rating/';
+        const baseUrl = '/rating/';
         let ratingImage = '';
         let result = '';
 

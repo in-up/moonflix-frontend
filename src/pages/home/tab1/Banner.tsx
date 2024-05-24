@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 
 interface Movie {
   movieId: number;
+  tmdbId: number;
   title?: string;
   name?: string;
   original_name?: string;
@@ -103,7 +104,15 @@ const BannerButton = styled.button`
 `;
 
 const Banner: React.FC = () => {
-  const [movie, setMovie] = useState<Movie>({});
+  const [movie, setMovie] = useState<Movie>({
+    movieId: 0,
+    tmdbId: 0,
+    title: "",
+    name: "",
+    original_name: "",
+    poster_path: "",
+    overview: ""
+  });
   const router = useRouter(); // useRouter 추가
 
   const truncate = (str: string, n: number) => {
@@ -115,7 +124,6 @@ const Banner: React.FC = () => {
       const res = await fetch(`/api${requests.fetchDQsPick}`);
       const data = await res.json();
       const randomIndex = Math.floor(Math.random() * data.result.length);
-      console.log(data.result[randomIndex]); // 콘솔에 출력
       setMovie(data.result[randomIndex]);
     }
     
@@ -123,7 +131,6 @@ const Banner: React.FC = () => {
   }, []);
 
   const handleClick = (movieId: number) => {
-    console.log(movieId);
     router.push('/movie/' + movieId);
   };
 
@@ -132,7 +139,8 @@ const Banner: React.FC = () => {
       <BannerContents>
         <BannerTitle>{movie?.title || movie?.name || movie?.original_name}</BannerTitle>
         <div className="banner__buttons">
-          <BannerButton onClick={() => handleClick(movie.movieId)}>
+          {/* movieId -> tmdbId로 변경하여 올바른 영화로 이동 */}
+          <BannerButton onClick={() => handleClick(movie.tmdbId)}> 
                 < i className="ri-arrow-right-line"></i>
                 &nbsp;자세히 보기
           </BannerButton>

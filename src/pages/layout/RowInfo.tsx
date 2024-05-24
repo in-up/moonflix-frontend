@@ -42,21 +42,34 @@ const Info = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  font-weight: 500;
   margin: 0;
   color: white;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 30vw;
+`;
+
+const OverviewText = styled.div`
+  font-size: 1rem;
+  font-weight: 300;
+  max-width: 30vw;
+  color: ${slate.slate7};
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const RatingText = styled.span`
   font-size: 1rem;
-  color: ${slate.slate3};
-  margin-top: 0.5rem;
-`;
-
-const RatingCount = styled.span`
-  font-size: 1rem;
-  color: ${slate.slate3};
-  margin-top: 0.5rem;
+  font-weight: 300;
+  color: ${slate.slate7};
 `;
 
 const TmdbInfo = styled.div`
@@ -71,22 +84,26 @@ const RoundImg = styled.div`
 
 const PosterWrapper = styled.div`
   overflow: hidden;
-  border-radius: 12px; /* 원하는 모서리 둥글기 */
-  width: 200px; /* Poster 컴포넌트의 width와 일치시켜야 함 */
-  height: 150px; /* Poster 컴포넌트의 height와 일치시켜야 함 */
+  border-radius: 12px;
+  height: 150px;
+  @media (max-width: 768px) {
+    max-width: 40vw;
+  }
 `;
 
 const RowInfo: React.FC<Movie> = ({ id, title, poster_path, rating, rating_count }) => {
   const router = useRouter();
   const base_url = "https://image.tmdb.org/t/p/original/";
   const [tmdb_rating, setRating] = useState<number>(-1);
+  const [movieOverview, setMovieOverview] = useState<string>('');
 
   useEffect(() => {
     async function fetchMovieDetails() {
       try {
         const response = await fetch(`${requests.fetchMovie}${id}?api_key=${requests.tmdbAPI}`);
         const data = await response.json();
-        setRating(data.vote_average); // Replace 'rating' with the correct key in the response
+        setRating(data.vote_average); 
+        setMovieOverview(data.overview);
       } catch (error) {
         console.error('Error fetching movie details:', error);
       }
@@ -116,11 +133,12 @@ const RowInfo: React.FC<Movie> = ({ id, title, poster_path, rating, rating_count
       </PosterWrapper>
       <Info>
         <Title>{title}</Title>
+        <OverviewText>{movieOverview}</OverviewText>
         <TmdbInfo>
           <RoundImg>
             <Rating rating={tmdb_rating} size={45} />
           </RoundImg>
-          <RatingText><br/>{tmdbRoundedRating}% ({rating_count})</RatingText>
+          <RatingText>{tmdbRoundedRating}% ({rating_count})</RatingText>
         </TmdbInfo>
       </Info>
     </Container>

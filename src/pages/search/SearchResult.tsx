@@ -16,9 +16,10 @@ interface Movie {
 
 const NoResults = styled.div`
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: white;
   margin: 1rem ;
+  font-weight: 600;
 `;
 
 const Container = styled.div`
@@ -47,11 +48,9 @@ const SearchResult: React.FC<searchProp> = ({ word }) => {
     fetchData();
   }, [word]);
 
-  console.log(movies);
-
   return (
     <Container>
-      {movies.length > 0 ? <NoResults>{movies.length}개의 결과를 찾았습니다.</NoResults> : <NoResults/>}
+      {movies.length > 0 ? <NoResults>{movies.length}개의 영화를 찾았어요.</NoResults> : <NoResults/>}
       {movies.length > 0 ? (
         movies.map((movie) => (
           <RowInfo
@@ -64,7 +63,7 @@ const SearchResult: React.FC<searchProp> = ({ word }) => {
           />
         ))
       ) : (
-        <NoResults>결과가 존재하지 않습니다</NoResults>
+        <NoResults>검색 결과가 없습니다.</NoResults>
       )}
     </Container>
   );
