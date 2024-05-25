@@ -15,7 +15,7 @@ import {
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
-    background: linear-gradient(135deg, #363d56, #202331);
+    background: linear-gradient(165deg, #03040d, #212534);
     background-attachment: fixed;
   }
 `;

@@ -10,7 +10,8 @@ import Backdrop from './Backdrop';
 import Credits from './Credits';
 import Rating from '../layout/Rating';
 import Comment from './Comment';
-import supabase from '@/apis/supabaseClient';
+import { slateDark } from "@radix-ui/colors";
+import Itembase from './Itembase';
 
 interface MovieInfo {
   id: number;
@@ -30,30 +31,11 @@ const Main = styled.main`
   margin-top: 6rem;
   color: white;
   display: flex;
+  justify-content: center;
 `;
 
-const LeftContainer = styled.div`
-  width: 20%;
-  height: 100%;
-  filter: blur(10px); /* 블러 처리 */
-
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const RightContainer = styled.div`
-  width: 20%;
-  height: 100%;
-  background-color: rgb();
-  filter: blur(10px); /* 블러 처리 */
-
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-`;
-
-const MiddleContainer = styled.div`
+// 중앙 & 메인
+const StyledContainer = styled.div`
   width: 60%;
   height: 100%;
   @media screen and (max-width: 768px) {
@@ -62,20 +44,12 @@ const MiddleContainer = styled.div`
   }
 `;
 
-const MovieTitle = styled.h1`
-  font-size: 3.75rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
-  color: white;
-  margin-bottom: 0.4rem;
-`;
-
 const Overview = styled.p`
-  font-size: 1.3rem;
-  padding-left: 3rem;
-  padding-right: 3rem;
+  font-size: 1rem;
+  padding: 1rem;
   color: white;
   padding-bottom: 2rem;
+  line-height: 1.875rem;
 `;
 
 const Divider = styled.div`
@@ -85,10 +59,29 @@ const Divider = styled.div`
   margin: 1rem 0;
 `;
 
-const RatingBox = styled.div`
-  padding-left: 3rem;
+const MovieInfo = styled.div`
+  margin: 1rem;
   display: flex;
+`
+
+const Box = styled.div`
+  background-color: ${slateDark.slate1};
+  border-radius: 16px;
+  border: #ffffff55 1px solid;
+  padding: 0.5rem;
+  margin: 0.25rem;
+  display: flex;
+  align-items: center;
+
+  div {
+    margin-left: 1rem;
+  }
 `;
+
+const BoxText = styled.div`
+  margin: 1rem;
+`;
+
 
 const RatingWord = styled.div`
   margin-right: 0.7rem;
@@ -102,11 +95,8 @@ const Movie: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const [movie, setMovie] = useState<MovieInfo | null>(null);
-  const tmdbId = typeof id === 'string' ? parseInt(id, 10) : -1;
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [rating, setRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [user, setUser] = useState<null | { id: string; email?: string }>(null);
+  const tmdbId = typeof id === 'string' ? parseInt(id, 10) : -1; // 문자열 id를 number로 변환
+  const [personalizeUrl, setPersonalizeUrl] = useState<string>('/item-based/'+id);
 
   useEffect(() => {
     const fetchMovieAndComments = async () => {
@@ -131,6 +121,16 @@ const Movie: React.FC = () => {
     }
   }, [id, apikey]);
 
+  const addRating = (rating: number) => {
+    const url = `/item-based/${id}`;
+    setPersonalizeUrl(url);
+  };
+
+  console.log(movie);
+  if (!movie) {
+    return <p>Loading...</p>;
+  }
+  console.log(personalizeUrl+id);
   return (
     <>
       <Head>
@@ -138,25 +138,39 @@ const Movie: React.FC = () => {
       </Head>
       <Header setCurrentPage={setCurrentPage} />
       <Main>
-        <LeftContainer />
-        <MiddleContainer>
-          <Backdrop path={movie ? movie.backdrop_path : ''} />
+        <StyledContainer>
+          <Backdrop
+            path={movie.backdrop_path}
+            title={movie.title}
+            year={movie.year}
+          />
           <div>
-            <MovieTitle>{movie ? `${movie.title} (${movie.year})` : 'Loading...'}</MovieTitle>
-            <RatingBox>
-              <Rating rating={movie ? movie.vote_average : 0} size={70} />
-            </RatingBox>
-            <RatingBox>
-              <RatingWord>평점 : {movie ? Math.round(movie.vote_average * 10) : 0}%</RatingWord>
-            </RatingBox>
-            <Divider />
-            <Overview>{movie ? movie.overview : 'Loading...'}</Overview>
-            <Divider />
-            <Credits tmdbId={tmdbId} />
+            <MovieInfo>
+              <Box>
+                <div>
+                   <Rating rating={movie.vote_average} size={30} />
+                </div>
+                <BoxText>{Math.round(movie.vote_average * 10)}%의 사용자가 긍정적으로 평가했습니다!</BoxText>
+              </Box>
+            </MovieInfo>
+            {/* <MovieInfo>
+              <Box>
+                <BoxText>테스트</BoxText>
+              </Box>
+            </MovieInfo> */}
+            <Overview>{movie.overview}</Overview>
+            <Credits
+              tmdbId={tmdbId}
+            />
+            <Itembase
+            title="비슷한 작품"
+            id="about"
+            fetchUrl={personalizeUrl}
+            addRating={addRating}
+            />
             {id && <Comment id={id as string} />}
           </div>
-        </MiddleContainer>
-        <RightContainer />
+        </StyledContainer>
       </Main>
     </>
   );

@@ -5,6 +5,7 @@ import Header from "../layout/Header";
 import Page1 from "./tab1/Page1";
 import Page2 from "./tab2/Page2";
 import Page3 from "./tab3/Page3";
+import Footer from "../layout/Footer"
 
 const Main = styled.main`
   position: relative;
@@ -40,6 +41,7 @@ const App: React.FC = () => {
       <Header setCurrentPage={setCurrentPage} />
       
       {renderPage()}
+      <Footer/>
     </Main>
   );
 };
