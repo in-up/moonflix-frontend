@@ -269,7 +269,17 @@ const Movie: React.FC = () => {
       fetchMovieAndComments();
     }
 
-    
+    // 로그인 세션 확인
+    const checkUserSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session && session.user) {
+        setUser({ id: session.user.id, email: session.user.email });
+      } else {
+        setUser(null);
+      }
+    };
+  
+    checkUserSession();
 
   }, [id]);  // 'id' 상태가 변할 때마다 실행
   
@@ -292,10 +302,6 @@ const Movie: React.FC = () => {
     const newRating = rating === (index * 2 + 1) ? (index + 1) * 2 : (index * 2 + 1);
     setRating(newRating);
   };
-
-  useEffect(() => {
-    console.log('Comments:', comments); // 현재 댓글 상태 확인
-  }, [comments]);
 
   const handleCommentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // 폼 제출 기본 동작 방지
