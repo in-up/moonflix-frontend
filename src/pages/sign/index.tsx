@@ -1,9 +1,11 @@
 import React, { useState, SyntheticEvent } from 'react';
 import styled from 'styled-components';
 import supabase from '../../apis/supabaseClient';
+import { signIn, signUp } from '@/apis/auth';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Header from '../layout/Header';
+import { fetchUserMovieStatus, getUserName } from '@/apis/userinfo';
 
 const Main = styled.main`
   position: relative;
@@ -146,42 +148,34 @@ const Sign = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const [userEmail, setUserEmail] = useState<string | undefined>('');
+  const [userName, setUserName] = useState<string | null>();
   const [currentPage, setCurrentPage] = useState("MovieInfo");
+  var name = '';
 
   const handleLogin = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-    if (error) {
-      console.error('Login error', error);
-      setMessage('로그인에 실패했습니다.');
-    } else {
-      console.log('User logged in', data);
+    
+    const signInResult = await signIn(email, password);
+    if (signInResult) {
       setMessage('로그인이 완료되었습니다!');
-      setUserEmail(data?.user?.email); // 로그인한 사용자의 이메일 저장
+      var name = getUserName();
+      setUserName(name); // 로그인한 사용자의 이메일 저장
+      alert('로그인이 완료되었습니다!');
+      router.push('/');
+    } else {
+      setMessage('로그인에 실패했습니다.');
+      
     }
   };
 
   const handleSignup = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
-    if (error) {
-      console.error('Signup error', error);
-      if (error.message.includes("rate limit")) {
-        setMessage('회원 가입 시도가 너무 자주 발생했습니다. 잠시 후 다시 시도해주세요.');
-      } else {
-        setMessage(`회원 가입에 실패했습니다: ${error.message}`);
-      }
-    } else {
-      console.log('User signed up', data);
+    const signUpResult = await signUp(email, password);
+    if (signUpResult) {
       setMessage('회원 가입이 완료되었습니다!');
-      setUserEmail(data?.user?.email); // 회원 가입 후 자동 로그인 처리
+      setUserName(email); // 회원 가입 후 자동 로그인 처리
+    } else {
+      setMessage(`회원 가입에 실패했습니다`);
     }
   };
   
@@ -224,7 +218,7 @@ const Sign = () => {
           </form>
         </FormContainer>
         {message && <Message onClick={() => setMessage('')}>{message}</Message>}
-        {userEmail && <SessionStatus>{userEmail}님 환영합니다!</SessionStatus>}
+        {userName && <SessionStatus>{userName}님 환영합니다!</SessionStatus>}
         {/* <button onClick={goToSignPage}>Go to Sign page</button>  */}
         {/* 페이지 이동 버튼 */}
       </LoginContainer>
