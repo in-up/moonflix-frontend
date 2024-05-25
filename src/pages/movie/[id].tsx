@@ -1,15 +1,15 @@
-// pages/movieinfo/[id].tsx
-
+// pages/movie/[id].tsx
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import requests from '../../apis/tmdb_requests';
 import Head from 'next/head';
-import styled from "styled-components";
-import Header from "../layout/Header";
+import styled from 'styled-components';
+import Header from '../layout/Header';
 import Backdrop from './Backdrop';
 import Credits from './Credits';
 import Rating from '../layout/Rating';
+import Comment from './Comment';
 import { slateDark } from "@radix-ui/colors";
 import Itembase from './Itembase';
 
@@ -56,7 +56,7 @@ const Divider = styled.div`
   width: 100%;
   height: 2px;
   background-color: rgba(255, 255, 255, 0.2);
-  margin: 1rem 0; 
+  margin: 1rem 0;
 `;
 
 const MovieInfo = styled.div`
@@ -87,16 +87,9 @@ const RatingWord = styled.div`
   margin-right: 0.7rem;
 `;
 
-
-const apikey = 'YOUR_TMDB_API_KEY';
-
 const Movie: React.FC = () => {
-  //header 정보
   const pageTitle = '영화달 MOONFLIX - 영화정보';
   const [currentPage, setCurrentPage] = useState("MovieInfo");
-  //페이지 상단 네비게이터
-
-  //api key
   const apikey = process.env.TMDB_API_KEY;
 
   const router = useRouter();
@@ -105,31 +98,28 @@ const Movie: React.FC = () => {
   const tmdbId = typeof id === 'string' ? parseInt(id, 10) : -1; // 문자열 id를 number로 변환
   const [personalizeUrl, setPersonalizeUrl] = useState<string>('/item-based/'+id);
 
-
   useEffect(() => {
-    const fetchMovie = async () => {
+    const fetchMovieAndComments = async () => {
       try {
-        const response = await axios.get(`${requests.fetchMovie}${id}?api_key=${apikey}&language=ko-KR`);
-        const data = response.data;
-        console.log(response.data);
-        const movieData: MovieInfo = {
-          id: data.id,
-          title: data.title,
-          overview: data.overview, // Assuming TMDB API provides director information
-          year: new Date(data.release_date).getFullYear(),
-          backdrop_path: data.backdrop_path,
-          vote_average: data.vote_average,
-        };
-        setMovie(movieData);
+        const movieResponse = await axios.get(`${requests.fetchMovie}${id}?api_key=${apikey}&language=ko-KR`);
+        const movieData = movieResponse.data;
+        setMovie({
+          id: movieData.id,
+          title: movieData.title,
+          overview: movieData.overview,
+          year: new Date(movieData.release_date).getFullYear(),
+          backdrop_path: movieData.backdrop_path,
+          vote_average: movieData.vote_average,
+        });
       } catch (error) {
-        console.error('Error fetching movie:', error);
+        console.error('Failed to fetch movie:', error);
       }
     };
 
     if (id) {
-      fetchMovie();
+      fetchMovieAndComments();
     }
-  }, [id]);
+  }, [id, apikey]);
 
   const addRating = (rating: number) => {
     const url = `/item-based/${id}`;
@@ -178,6 +168,7 @@ const Movie: React.FC = () => {
             fetchUrl={personalizeUrl}
             addRating={addRating}
             />
+            {id && <Comment id={id as string} />}
           </div>
         </StyledContainer>
       </Main>
