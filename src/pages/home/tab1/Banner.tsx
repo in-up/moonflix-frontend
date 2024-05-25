@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import requests from "../../../apis/requests";
 import styled from "styled-components";
-import { slate } from "@radix-ui/colors";
-import { useRouter } from 'next/router';
+import { slate, slateA, slateDarkA } from "@radix-ui/colors";
+import { useRouter } from "next/router";
+import Rating from "../../layout/Rating";
 
 interface Movie {
   movieId: number;
@@ -12,60 +13,68 @@ interface Movie {
   original_name?: string;
   poster_path?: string;
   overview?: string;
+  genres?: string;
+  rating_avg: number;
 }
 
 const BannerWrapper = styled.header<{ imageUrl: string }>`
   color: white;
   object-fit: contain;
-  height: 28rem;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url(${props => props.imageUrl}) center/cover no-repeat;
-  border-radius: 20px;
-  margin: 1rem;
+  height: 36rem;
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.9),
+      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.3),
+      rgba(0, 0, 0, 0.7)
+    ),
+    url(${(props) => props.imageUrl}) center/cover no-repeat;
 `;
 
 const BannerContents = styled.div`
-  margin-left: 5rem;
-  padding-top: 10rem;
-  height: 10rem;
+  margin-left: 10rem;
+  padding-top: 12rem;
+  height: 24rem;
   @media (max-width: 768px) {
-    margin-left: 1rem;
+    margin-left: 2rem;
   }
 `;
 
 const BannerTitle = styled.h1`
   font-size: 3rem;
   font-weight: 800;
-  padding-bottom: 0.5rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 `;
 
+const BannerTag = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
+const GenreBox = styled.div`
+  background-color: ${slateDarkA.slateA12};
+  color: #171a27;
+  font-weight: 600;
+  border-radius: 16px;
+  padding: 0.5rem 1rem;
+  margin: 0 0.3rem;
+`;
+
 const BannerDescription = styled.p`
   width: 80%;
   line-height: 1.3;
-  padding-top: 1rem;
   font-weight: 500;
   font-size: 1rem;
-  max-width: 700px;
-  height: 80px;
+  max-width: 1000px;
+  height: 60px;
 
   @media (max-width: 768px) {
     font-size: 0.8rem;
+    max-width: 80vw;
     width: auto;
   }
-`;
-
-const BannerFadeBottom = styled.div`
-  height: 8rem;
-  border-radius: 20px;
-  background-image: linear-gradient(
-    180deg,
-    transparent,
-    rgba(37, 37, 37, 0.21),
-    #111
-  );
 `;
 
 const BannerButton = styled.button`
@@ -86,7 +95,7 @@ const BannerButton = styled.button`
   transition: transform 0.3s ease;
   i {
     padding: 0rem 0.5rem;
-    transition: transform 0.3s ease; /* 아이콘에 트랜지션 적용 */
+    transition: transform 0.3s ease;
     transform: translateX(-3px);
   }
 
@@ -94,12 +103,39 @@ const BannerButton = styled.button`
     transform: scale(1.08);
 
     i {
-      transform: translateX(3px); /* 호버링 시 아이콘을 오른쪽으로 이동 */
+      transform: translateX(3px);
     }
   }
   @media (max-width: 768px) {
     font-size: 0.8rem;
     border-radius: 4px;
+  }
+`;
+
+const BannerInfo = styled.div`
+  display: flex;
+  justify-content: flex;
+  align-items: center;
+  width: 100%;
+  margin-top: 2rem;
+
+  .divider {
+    margin: 0 0.5rem;
+    height: 2.3rem;
+    width: 0.07rem;
+    background-color: ${slateDarkA.slateA10};
+  }
+`;
+
+const BannerRating = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    margin: 0 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
   }
 `;
 
@@ -111,9 +147,11 @@ const Banner: React.FC = () => {
     name: "",
     original_name: "",
     poster_path: "",
-    overview: ""
+    overview: "",
+    genres: "",
+    rating_avg: 5,
   });
-  const router = useRouter(); // useRouter 추가
+  const router = useRouter();
 
   const truncate = (str: string, n: number) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
@@ -126,30 +164,42 @@ const Banner: React.FC = () => {
       const randomIndex = Math.floor(Math.random() * data.result.length);
       setMovie(data.result[randomIndex]);
     }
-    
+
     fetchData();
   }, []);
 
   const handleClick = (movieId: number) => {
-    router.push('/movie/' + movieId);
+    router.push("/movie/" + movieId);
   };
 
   return (
-    <BannerWrapper imageUrl={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`}>
+    <BannerWrapper
+      imageUrl={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`}
+    >
       <BannerContents>
-        <BannerTitle>{movie?.title || movie?.name || movie?.original_name}</BannerTitle>
-        <div className="banner__buttons">
-          {/* movieId -> tmdbId로 변경하여 올바른 영화로 이동 */}
-          <BannerButton onClick={() => handleClick(movie.tmdbId)}> 
-                < i className="ri-arrow-right-line"></i>
-                &nbsp;자세히 보기
-          </BannerButton>
-        </div>
+        <BannerTitle>
+          {movie?.title || movie?.name || movie?.original_name}
+        </BannerTitle>
         <BannerDescription>
           {truncate(movie?.overview || "", 150)}
         </BannerDescription>
+        <BannerButton onClick={() => handleClick(movie.tmdbId)}>
+          <i className="ri-arrow-right-line"></i>
+          &nbsp;자세히 보기
+        </BannerButton>
+        <BannerInfo>
+          <BannerRating>
+            <Rating rating={movie.rating_avg * 2} size={45} />
+            <p>{Math.round(movie.rating_avg * 20)}%</p>
+          </BannerRating>
+          <div className="divider"></div>
+          <BannerTag>
+            {movie?.genres?.split("|").map((genre, index) => (
+              <GenreBox key={index}># {genre}</GenreBox>
+            ))}
+          </BannerTag>
+        </BannerInfo>
       </BannerContents>
-      <BannerFadeBottom />
     </BannerWrapper>
   );
 };

@@ -17,8 +17,8 @@ const Container = styled.div<ContainerProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2.5rem;
-  background-color: ${props => (props.scroll ? blackA.blackA9 : blackA.blackA1)};
+  padding: 0.75rem 2.5rem;
+  background-color: ${props => (props.scroll ? blackA.blackA9 : 'rgba(0, 0, 0, 0)')};
   transition: background-color 0.7s ease;
   z-index: 1000;
 
@@ -36,9 +36,10 @@ const RightSection = styled.div`
     margin: 0 1rem;
     padding: 0.5rem;
     background-color: transparent;
-    color: ${slate.slate10};
+    color: ${slate.slate8};
     font-weight: bold;
     font-size: 1.25rem;
+    font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     border: none;
     cursor: pointer;
     transition: text-shadow, color 0.3s ease;
