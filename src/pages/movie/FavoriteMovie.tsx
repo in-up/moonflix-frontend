@@ -1,19 +1,22 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import supabase from '@/apis/supabaseClient';
 
 const FavoriteButton = styled.button`
   padding: 10px 15px;
   height: 50px;
-  background-color: #78798c;
-  color: white;
+  background-color: #78798c;  // 기본 배경색
+  color: white;  // 글씨색
   border: none;
   border-radius: 8px;
   cursor: pointer;
   margin-top: 15px;
   margin-left: 180px;
+  transition: background-color 0.5s ease, transform 0.5s ease, font-size 0.5s ease;  // 배경색, 크기 변환, 글씨 크기 변화에 대한 애니메이션 설정
+
   &:hover {
-    background-color: #6a6b7c;
+    background-color: #9fa1b8;  // 마우스 오버 시 밝은 배경색
+    transform: scale(1.05);  // 5% 크기 증가
   }
 `;
 
@@ -34,7 +37,6 @@ const FavoriteMovie: React.FC<FavoriteMovieProps> = ({ tmdbId }) => {
       .upsert({
         user_id: session.user.id,
         movie_id: tmdbId,
-        status: 'favorite'
       }, {
         onConflict: 'user_id'
       });
