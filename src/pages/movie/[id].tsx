@@ -10,6 +10,7 @@ import Backdrop from './Backdrop';
 import Credits from './Credits';
 import Rating from '../layout/Rating';
 import Comment from './Comment';
+import FavoriteMovie from './FavoriteMovie';
 import { slateDark } from "@radix-ui/colors";
 import Itembase from './Itembase';
 
@@ -152,7 +153,10 @@ const Movie: React.FC = () => {
                 </div>
                 <BoxText>{Math.round(movie.vote_average * 10)}%의 사용자가 긍정적으로 평가했습니다!</BoxText>
               </Box>
+              {movie ? '' : 'Loading...'}
+              <FavoriteMovie tmdbId={movie?.id || 0} />
             </MovieInfo>
+            
             {/* <MovieInfo>
               <Box>
                 <BoxText>테스트</BoxText>
