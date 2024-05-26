@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { slate, slateA, slateDark, slateDarkA } from "@radix-ui/colors";
 import { useRouter } from "next/router";
 import Rating from "../../layout/Rating";
+import { formatTitle } from "../../../apis/formatTitle";
 
 interface Movie {
   movieId: number;
@@ -178,6 +179,8 @@ const Banner: React.FC = () => {
     fetchData();
   }, []);
 
+  const formattedTitle = movie.title ? formatTitle(movie.title) : "";
+
   const handleClick = (movieId: number) => {
     router.push("/movie/" + movieId);
   };
@@ -188,7 +191,7 @@ const Banner: React.FC = () => {
     >
       <BannerContents>
         <BannerTitle>
-          {movie?.title || movie?.name || movie?.original_name}
+          {formattedTitle || movie?.name || movie?.original_name}
         </BannerTitle>
         <BannerDescription>
           {truncate(movie?.overview || "", 150)}

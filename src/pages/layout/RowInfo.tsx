@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import Poster from './Poster'; // Corrected import path
-import { useRouter } from 'next/router';
-import requests from '../../apis/tmdb_requests';
-import Rating from './Rating';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import Poster from "./Poster"; // Corrected import path
+import { useRouter } from "next/router";
+import requests from "../../apis/tmdbRequests";
+import Rating from "./Rating";
 import { slate, slateDarkA } from "@radix-ui/colors";
 
 interface Movie {
@@ -91,29 +91,38 @@ const PosterWrapper = styled.div`
   }
 `;
 
-const RowInfo: React.FC<Movie> = ({ id, title, poster_path, rating, rating_count }) => {
+const RowInfo: React.FC<Movie> = ({
+  id,
+  title,
+  poster_path,
+  rating,
+  rating_count,
+}) => {
   const router = useRouter();
   const base_url = "https://image.tmdb.org/t/p/original/";
   const [tmdb_rating, setRating] = useState<number>(-1);
-  const [movieOverview, setMovieOverview] = useState<string>('');
+  const [movieOverview, setMovieOverview] = useState<string>("");
 
   useEffect(() => {
     async function fetchMovieDetails() {
       try {
-        const response = await fetch(`${requests.fetchMovie}${id}?api_key=${requests.tmdbAPI}`);
+        const response = await fetch(
+          `${requests.fetchMovie}${id}?api_key=${requests.tmdbAPI}`
+        );
         const data = await response.json();
-        setRating(data.vote_average); 
+        setRating(data.vote_average);
         setMovieOverview(data.overview);
       } catch (error) {
-        console.error('Error fetching movie details:', error);
+        console.error("Error fetching movie details:", error);
       }
     }
 
     fetchMovieDetails();
   }, [id]);
 
-  const roundedRating = rating % 1 === 0 ? rating.toFixed(1) : Math.round(rating * 10) / 10;
-  const tmdbRoundedRating = Math.round(tmdb_rating * 100 / 10);
+  const roundedRating =
+    rating % 1 === 0 ? rating.toFixed(1) : Math.round(rating * 10) / 10;
+  const tmdbRoundedRating = Math.round((tmdb_rating * 100) / 10);
 
   const handleClick = () => {
     router.push(`/movie/${id}`);
@@ -138,7 +147,9 @@ const RowInfo: React.FC<Movie> = ({ id, title, poster_path, rating, rating_count
           <RoundImg>
             <Rating rating={tmdb_rating} size={45} />
           </RoundImg>
-          <RatingText>{tmdbRoundedRating}% ({rating_count})</RatingText>
+          <RatingText>
+            {tmdbRoundedRating}% ({rating_count})
+          </RatingText>
         </TmdbInfo>
       </Info>
     </Container>
