@@ -17,9 +17,10 @@ const Container = styled.div<ContainerProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 2.5rem;
-  background-color: ${props => (props.scroll ? blackA.blackA9 : 'rgba(0, 0, 0, 0)')};
-  transition: background-color 0.7s ease;
+  padding: 0.5rem 2.5rem;
+  background-color: ${(props) =>
+    props.scroll ? blackA.blackA11 : "rgba(0, 0, 0, 0)"};
+  transition: background-color 0.3s ease;
   z-index: 1000;
 
   @media screen and (max-width: 768px) {
@@ -38,8 +39,11 @@ const RightSection = styled.div`
     background-color: transparent;
     color: ${slate.slate8};
     font-weight: bold;
-    font-size: 1.25rem;
-    font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    font-size: 1.2rem;
+    font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont,
+      system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+      "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", sans-serif;
     border: none;
     cursor: pointer;
     transition: text-shadow, color 0.3s ease;
@@ -67,11 +71,13 @@ const DropdownContainer = styled.div`
   align-items: center;
 `;
 
-const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({ setCurrentPage }) => {
+const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({
+  setCurrentPage,
+}) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("tab1");
   const [scroll, setScroll] = useState(false);
-  const router = useRouter(); 
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,9 +88,9 @@ const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({ setCurre
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -127,7 +133,10 @@ const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({ setCurre
       </RightSection>
       <DropdownContainer>
         <RiIcon className="ri-search-line" onClick={handleSearchButtonClick} />
-        <RiIcon className="ri-inbox-line" onClick={() => setCurrentPage("page1")} />
+        <RiIcon
+          className="ri-inbox-line"
+          onClick={() => setCurrentPage("page1")}
+        />
         <ProfileMenu open={menuOpen} setOpen={setMenuOpen} />
       </DropdownContainer>
     </Container>

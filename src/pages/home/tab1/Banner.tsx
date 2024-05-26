@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import requests from "../../../apis/requests";
 import styled from "styled-components";
-import { slate, slateA, slateDarkA } from "@radix-ui/colors";
+import { slate, slateA, slateDark, slateDarkA } from "@radix-ui/colors";
 import { useRouter } from "next/router";
 import Rating from "../../layout/Rating";
 
@@ -22,11 +22,16 @@ const BannerWrapper = styled.header<{ imageUrl: string }>`
   object-fit: contain;
   height: 36rem;
   background: linear-gradient(
-      rgba(0, 0, 0, 0.9),
       rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.9)
+    ),
+    linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.7),
       rgba(0, 0, 0, 0.3),
-      rgba(0, 0, 0, 0.3),
-      rgba(0, 0, 0, 0.7)
+      rgba(0, 0, 0, 0.1)
     ),
     url(${(props) => props.imageUrl}) center/cover no-repeat;
 `;
@@ -42,7 +47,7 @@ const BannerContents = styled.div`
 
 const BannerTitle = styled.h1`
   font-size: 3rem;
-  font-weight: 800;
+  font-weight: 700;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -50,16 +55,20 @@ const BannerTitle = styled.h1`
 
 const BannerTag = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
 `;
 
 const GenreBox = styled.div`
-  background-color: ${slateDarkA.slateA12};
+  background-color: ${slateDark.slate12};
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
   color: #171a27;
   font-weight: 600;
-  border-radius: 16px;
+  border-radius: 20px;
   padding: 0.5rem 1rem;
   margin: 0 0.3rem;
+  white-space: nowrap;
 `;
 
 const BannerDescription = styled.p`
@@ -90,6 +99,7 @@ const BannerButton = styled.button`
   border-radius: 8px;
   padding: 0.5rem 1rem;
   margin-right: 1rem;
+  box-shadow: 0px 5px 14px rgba(0, 0, 0, 0.2);
   background-color: ${slate.slate1};
   color: black;
   transition: transform 0.3s ease;
@@ -120,7 +130,7 @@ const BannerInfo = styled.div`
   margin-top: 2rem;
 
   .divider {
-    margin: 0 0.5rem;
+    margin: 0 0.75rem 0 0;
     height: 2.3rem;
     width: 0.07rem;
     background-color: ${slateDarkA.slateA10};
