@@ -13,7 +13,7 @@ const Main = styled.main`
   height: 100vh;
   background-position: center;
   font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  margin-top: 6rem;
+
 `;
 
 const App: React.FC = () => {

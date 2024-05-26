@@ -1,11 +1,12 @@
 import React from "react";
 import Image from "next/image";
-import styled, { keyframes, css } from "styled-components";
-import { useRouter } from 'next/router';
+import styled, { css } from "styled-components";
+import { useRouter } from "next/router";
+import { formatTitle } from "../../apis/formatTitle";
 
 interface PosterProps {
   id: number;
-  movieTitle: string;
+  movieTitle?: string;
   path: string;
   alt: string;
   width: number;
@@ -13,35 +14,36 @@ interface PosterProps {
   isNoUse?: boolean;
 }
 
-const borderAnimation = keyframes`
-  from {
-    border-color: #ffffff00;
+const PosterContainer = styled.div<{ isNoUse?: boolean }>`
+  position: relative;
+  display: inline-block;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+
+  &:hover .title {
+    opacity: 1;
   }
-  to {
-    border-color: #fff;
+
+  transition: border-color 0.3s ease;
+
+  border: 3px solid #ffffff00;
+  &:hover {
+    border-color: ${({ isNoUse }) => (isNoUse ? "none" : "#fff")};
   }
 `;
 
-const PosterImage = styled(Image).attrs<{ isNoUse?: boolean }>((props) => ({
-  isNoUse: props.isNoUse
-}))<{ isNoUse?: boolean }>`
+const PosterImage = styled(Image)<{ isNoUse?: boolean }>`
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.3);
-  border: 3px solid #ffffff00;
   padding: 0.25rem;
-  transition: border-color 0.3s ease;
-  cursor: pointer;
 
-  &:hover {
-    border-color: #fff;
-  }
-
-  //isUseNone 파라미터가 true일 경우 적용되는 스타일
   ${(props) =>
     props.isNoUse &&
     css`
-      border-radius: 0; // 예시로 다른 스타일 적용
+      border-radius: 0;
       padding: 0px;
       border: 1px solid #ffffff00;
       box-shadow: 0 0 0;
@@ -51,25 +53,62 @@ const PosterImage = styled(Image).attrs<{ isNoUse?: boolean }>((props) => ({
     `}
 `;
 
-const Poster: React.FC<PosterProps> = ({ id, movieTitle, path, alt, width, height, isNoUse = false }) => {
+const TitleOverlay = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  font-size: 1.3rem;
+  font-weight: 600;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const Poster: React.FC<PosterProps> = ({
+  id,
+  movieTitle,
+  path,
+  alt,
+  width,
+  height,
+  isNoUse,
+}) => {
   const router = useRouter();
 
   const handleClick = (movieId: number, movieTitle: string) => {
     console.log(movieId);
-    router.push('/movie/' + movieId);
+    router.push("/movie/" + movieId);
   };
 
+  const formattedTitle = movieTitle ? formatTitle(movieTitle) : "";
+
   return (
-    <PosterImage
-      src={path}
-      alt={alt}
-      width={width}
-      height={height}
-      style={{ objectFit: "cover" }}
-      priority={true}
-      onClick={() => handleClick(id, movieTitle)}
+    <PosterContainer
       isNoUse={isNoUse}
-    />
+      onClick={() => handleClick(id, movieTitle || "")}
+    >
+      <PosterImage
+        src={path}
+        alt={alt}
+        width={width}
+        height={height}
+        style={{ objectFit: "cover" }}
+        priority={true}
+        isNoUse={isNoUse}
+      />
+      <TitleOverlay className="title">{formattedTitle}</TitleOverlay>
+    </PosterContainer>
   );
 };
 

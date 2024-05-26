@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import requests from "../../apis/tmdb_requests";
+import requests from "../../apis/tmdbRequests";
 import styled from "styled-components";
 import { slate } from "@radix-ui/colors";
 
@@ -15,8 +15,8 @@ const BackdropWrapper = styled.header<{ imageUrl: string }>`
   color: white;
   object-fit: contain;
   height: 18rem;
-  background: linear-gradient(rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.5)),
-    url(${props => props.imageUrl}) center/cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)),
+    url(${(props) => props.imageUrl}) center/cover no-repeat;
   border-radius: 20px;
   margin: 0 1rem;
 `;
@@ -25,7 +25,7 @@ const StyledContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
-`
+`;
 
 const TitleText = styled.div`
   font-size: 2.5rem;
@@ -39,7 +39,7 @@ const TitleText = styled.div`
   @media screen and (max-width: 768px) {
     margin: 0 0 2rem 2rem;
   }
-`
+`;
 
 const YearText = styled.div`
   font-size: 1.25rem;
@@ -48,11 +48,9 @@ const YearText = styled.div`
   @media screen and (max-width: 768px) {
     margin: 0 2rem 2rem 0;
   }
-`
-
+`;
 
 const Backdrop: React.FC<BackdropProps> = ({ path, title, year }) => {
-  
   return (
     <BackdropWrapper imageUrl={`https://image.tmdb.org/t/p/original/${path}`}>
       <StyledContainer>

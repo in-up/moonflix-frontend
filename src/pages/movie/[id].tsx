@@ -1,17 +1,17 @@
 // pages/movie/[id].tsx
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import requests from '../../apis/tmdb_requests';
-import Head from 'next/head';
-import styled from 'styled-components';
-import Header from '../layout/Header';
-import Backdrop from './Backdrop';
-import Credits from './Credits';
-import Rating from '../layout/Rating';
-import Comment from './Comment';
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import requests from "../../apis/tmdbRequests";
+import Head from "next/head";
+import styled from "styled-components";
+import Header from "../layout/Header";
+import Backdrop from "./Backdrop";
+import Credits from "./Credits";
+import Rating from "../layout/Rating";
+import Comment from "./Comment";
 import { slateDark } from "@radix-ui/colors";
-import Itembase from './Itembase';
+import Itembase from "./Itembase";
 
 interface MovieInfo {
   id: number;
@@ -27,7 +27,10 @@ const Main = styled.main`
   width: 100%;
   height: 100vh;
   background-position: center;
-  font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+    "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", sans-serif;
   margin-top: 6rem;
   color: white;
   display: flex;
@@ -62,7 +65,7 @@ const Divider = styled.div`
 const MovieInfo = styled.div`
   margin: 1rem;
   display: flex;
-`
+`;
 
 const Box = styled.div`
   background-color: ${slateDark.slate1};
@@ -82,26 +85,29 @@ const BoxText = styled.div`
   margin: 1rem;
 `;
 
-
 const RatingWord = styled.div`
   margin-right: 0.7rem;
 `;
 
 const Movie: React.FC = () => {
-  const pageTitle = '영화달 MOONFLIX - 영화정보';
+  const pageTitle = "영화달 MOONFLIX - 영화정보";
   const [currentPage, setCurrentPage] = useState("MovieInfo");
   const apikey = process.env.TMDB_API_KEY;
 
   const router = useRouter();
   const { id } = router.query;
   const [movie, setMovie] = useState<MovieInfo | null>(null);
-  const tmdbId = typeof id === 'string' ? parseInt(id, 10) : -1; // 문자열 id를 number로 변환
-  const [personalizeUrl, setPersonalizeUrl] = useState<string>('/item-based/'+id);
+  const tmdbId = typeof id === "string" ? parseInt(id, 10) : -1; // 문자열 id를 number로 변환
+  const [personalizeUrl, setPersonalizeUrl] = useState<string>(
+    "/item-based/" + id
+  );
 
   useEffect(() => {
     const fetchMovieAndComments = async () => {
       try {
-        const movieResponse = await axios.get(`${requests.fetchMovie}${id}?api_key=${apikey}&language=ko-KR`);
+        const movieResponse = await axios.get(
+          `${requests.fetchMovie}${id}?api_key=${apikey}&language=ko-KR`
+        );
         const movieData = movieResponse.data;
         setMovie({
           id: movieData.id,
@@ -112,7 +118,7 @@ const Movie: React.FC = () => {
           vote_average: movieData.vote_average,
         });
       } catch (error) {
-        console.error('Failed to fetch movie:', error);
+        console.error("Failed to fetch movie:", error);
       }
     };
 
@@ -130,7 +136,7 @@ const Movie: React.FC = () => {
   if (!movie) {
     return <p>Loading...</p>;
   }
-  console.log(personalizeUrl+id);
+  console.log(personalizeUrl + id);
   return (
     <>
       <Head>
@@ -148,9 +154,12 @@ const Movie: React.FC = () => {
             <MovieInfo>
               <Box>
                 <div>
-                   <Rating rating={movie.vote_average} size={30} />
+                  <Rating rating={movie.vote_average} size={30} />
                 </div>
-                <BoxText>{Math.round(movie.vote_average * 10)}%의 사용자가 긍정적으로 평가했습니다!</BoxText>
+                <BoxText>
+                  {Math.round(movie.vote_average * 10)}%의 사용자가 긍정적으로
+                  평가했습니다!
+                </BoxText>
               </Box>
             </MovieInfo>
             {/* <MovieInfo>
@@ -159,14 +168,12 @@ const Movie: React.FC = () => {
               </Box>
             </MovieInfo> */}
             <Overview>{movie.overview}</Overview>
-            <Credits
-              tmdbId={tmdbId}
-            />
+            <Credits tmdbId={tmdbId} />
             <Itembase
-            title="비슷한 작품"
-            id="about"
-            fetchUrl={personalizeUrl}
-            addRating={addRating}
+              title="비슷한 작품"
+              id="about"
+              fetchUrl={personalizeUrl}
+              addRating={addRating}
             />
             {id && <Comment id={id as string} />}
           </div>

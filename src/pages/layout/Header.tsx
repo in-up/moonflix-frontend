@@ -17,9 +17,10 @@ const Container = styled.div<ContainerProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2.5rem;
-  background-color: ${props => (props.scroll ? blackA.blackA9 : blackA.blackA1)};
-  transition: background-color 0.7s ease;
+  padding: 0.5rem 2.5rem;
+  background-color: ${(props) =>
+    props.scroll ? blackA.blackA11 : "rgba(0, 0, 0, 0)"};
+  transition: background-color 0.3s ease;
   z-index: 1000;
 
   @media screen and (max-width: 768px) {
@@ -36,9 +37,13 @@ const RightSection = styled.div`
     margin: 0 1rem;
     padding: 0.5rem;
     background-color: transparent;
-    color: ${slate.slate10};
+    color: ${slate.slate8};
     font-weight: bold;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
+    font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont,
+      system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+      "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol", sans-serif;
     border: none;
     cursor: pointer;
     transition: text-shadow, color 0.3s ease;
@@ -66,11 +71,13 @@ const DropdownContainer = styled.div`
   align-items: center;
 `;
 
-const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({ setCurrentPage }) => {
+const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({
+  setCurrentPage,
+}) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("tab1");
   const [scroll, setScroll] = useState(false);
-  const router = useRouter(); 
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,9 +88,9 @@ const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({ setCurre
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
