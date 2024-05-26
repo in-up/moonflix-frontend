@@ -98,6 +98,10 @@ const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({
     setCurrentPage("home");
     router.push("/search");
   };
+  const handleProfileButtonClick = () => {
+    setCurrentPage("home");
+    router.push("/profile");
+  };
 
   return (
     <Container scroll={scroll}>
@@ -133,10 +137,7 @@ const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({
       </RightSection>
       <DropdownContainer>
         <RiIcon className="ri-search-line" onClick={handleSearchButtonClick} />
-        <RiIcon
-          className="ri-inbox-line"
-          onClick={() => setCurrentPage("page1")}
-        />
+        <RiIcon className="ri-inbox-line" onClick={handleProfileButtonClick} />
         <ProfileMenu open={menuOpen} setOpen={setMenuOpen} />
       </DropdownContainer>
     </Container>

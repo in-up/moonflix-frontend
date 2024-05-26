@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import Link from "next/link"; // Next.js의 Link 컴포넌트 추가
+import { isAuthenticated, signOut } from "@/apis/auth";
 
 const fadeIn = keyframes`
   from {
@@ -75,9 +76,26 @@ interface ProfileMenuProps {
 }
 
 export const ProfileMenu: React.FC<ProfileMenuProps> = ({ open, setOpen }) => {
+  const [login, setLogin] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = () => {
+      setLogin(isAuthenticated());
+    };
+    checkAuth();
+  }, []);
+  
   const handleSign = () => {
     setOpen(false);
   };
+
+  const handleLogout = () => {
+    signOut();
+    setLogin(false);
+    setOpen(false);
+    alert('로그아웃 되었습니다.');
+  };
+
 
   return (
     <div>
@@ -89,11 +107,19 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ open, setOpen }) => {
             아무개 님
           </Link>
         </MenuItem>
-        <MenuItem onClick={handleSign}>
+        {login ? (
+          <MenuItem onClick={handleLogout}>
+          <Link href="/">
+            로그아웃
+          </Link>
+        </MenuItem>
+        ) : (
+          <MenuItem onClick={handleSign}>
           <Link href="/sign">
             로그인
           </Link>
-        </MenuItem>
+          </MenuItem>
+        )}
       </MenuContainer>
     </div>
   );
