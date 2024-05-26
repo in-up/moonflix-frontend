@@ -19,12 +19,12 @@ const Page1: React.FC = () => {
   const [myRating, setMyRating] = useState<number[]>([]);
   const [login, setLogin] = useState(false); // 로그인 확인
   const [requestResult, setRequestResult] = useState<boolean | null>(null);
-  const userBaseUrl = '/user-based/';
+  const userBaseUrl = "/user-based/";
 
   useEffect(() => {
     const sendUserBasedRequest = async () => {
       try {
-        await axios.get('/api/user-based/'+getUserId());
+        await axios.get("/api/user-based/" + getUserId());
         // 요청이 성공하면 true 설정
         setRequestResult(true);
       } catch (error) {
@@ -32,7 +32,7 @@ const Page1: React.FC = () => {
         setRequestResult(false);
       }
     };
-    
+    sendUserBasedRequest();
   }, []);
 
   useEffect(() => {
@@ -62,35 +62,28 @@ const Page1: React.FC = () => {
   return (
     <div className="app">
       <Banner />
-      {login && requestResult ? (
       <Row
-        title="당신을 위한 추천 - user - based"
-        id="UB"
-        fetchUrl={userBaseUrl+getUserId()}
-        addRating={addRating}
-        key={personalizeUrl}
-      />) : (
-        <Row
-        title="당신을 위한 추천"
-        id="RF"
-        fetchUrl={personalizeUrl}
-        addRating={addRating}
-        key={personalizeUrl}
-      />
-      )}
-
-      <Row
-        title="영화달 베스트"
+        title="TOP 콘텐츠"
         id="DP"
         fetchUrl={requests.fetchDQsPick}
         addRating={addRating}
       />
+      {login && requestResult && (
+        <Row
+          title="취향저격! 추천 콘텐츠"
+          id="UB"
+          fetchUrl={userBaseUrl + getUserId()}
+          addRating={addRating}
+          key={personalizeUrl}
+        />
+      )}
       {/* <Row
-        title="액션"
-        id="AM"
-        fetchUrl={requests.fetchActionMovies}
+        title="애니메이션"
+        id="AN"
+        fetchUrl={requests.fetchAnimationMovies}
         addRating={addRating}
-      />
+      /> */}
+      {/*
       <Row
         title="코미디"
         id="CM"
