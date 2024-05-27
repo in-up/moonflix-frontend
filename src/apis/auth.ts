@@ -87,6 +87,29 @@ export function getUserId(): string | undefined {
   return tokenData?.userId;
 }
 
+export async function getUserName(): Promise<string | null> {
+  try {
+    const userId = getUserId();
+    if (!userId) return null;
+
+    const { data, error } = await supabase
+      .from('userdata')
+      .select('user_name')
+      .eq('user_id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching user name:', error.message);
+      return null;
+    }
+
+    return data?.user_name || null;
+  } catch (error: any) {
+    console.error('Error fetching user name:', error.message);
+    return null;
+  }
+}
+
 export function getSessionData(): SessionData | null {
   return getTokenDataFromStorage();
 }
