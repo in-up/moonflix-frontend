@@ -23,7 +23,7 @@ const Main = styled.main`
 
 const StyledContainer = styled.div`
   background-color: ${slateDarkA.slateA5};
-  border-radius: 30px;
+  border-radius: 36px;
   display: flex;
   flex-direction: column;
   width: 60vw;

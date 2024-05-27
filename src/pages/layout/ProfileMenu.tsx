@@ -40,6 +40,7 @@ const MenuContainer = styled.div<{ open: boolean }>`
 const MenuItem = styled.div`
   padding: 5px;
   cursor: pointer;
+  color: black;
 
   &:hover {
     background-color: #f0f0f0;
