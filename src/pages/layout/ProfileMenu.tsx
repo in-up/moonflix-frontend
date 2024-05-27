@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import Link from "next/link"; // Next.js의 Link 컴포넌트 추가
-import { isAuthenticated, signOut } from "@/apis/auth";
+import { isAuthenticated, signOut, getUserName } from "@/apis/auth";
 
 const fadeIn = keyframes`
   from {
@@ -57,7 +57,7 @@ const ProfileImageContainer = styled.div`
   height: 40px;
   border-radius: 50%;
   margin-left: 2rem;
-  background-image: url('/profile.png');
+  background-image: url("/profile.png");
   background-size: cover;
   cursor: pointer;
   transition: transform 0.3s;
@@ -77,14 +77,24 @@ interface ProfileMenuProps {
 
 export const ProfileMenu: React.FC<ProfileMenuProps> = ({ open, setOpen }) => {
   const [login, setLogin] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkAuth = () => {
-      setLogin(isAuthenticated());
+    const checkAuth = async () => {
+      const isAuthenticated = await getAuthStatus();
+      setLogin(isAuthenticated);
+      if (isAuthenticated) {
+        const name = await getUserName();
+        setUserName(name);
+      }
     };
     checkAuth();
   }, []);
-  
+
+  const getAuthStatus = async () => {
+    return isAuthenticated();
+  };
+
   const handleSign = () => {
     setOpen(false);
   };
@@ -93,31 +103,25 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ open, setOpen }) => {
     signOut();
     setLogin(false);
     setOpen(false);
-    alert('로그아웃 되었습니다.');
+    alert("로그아웃 되었습니다.");
   };
-
 
   return (
     <div>
       <ProfileImageContainer onClick={() => setOpen(!open)} />
       <MenuContainer open={open}>
-        {/* Link를 MenuItem 안에 넣어서 클릭 시 이동할 주소를 지정할 수 있습니다. */}
-        <MenuItem onClick={handleSign}>
-          <Link href="/sign">
-            아무개 님
-          </Link>
-        </MenuItem>
+        {userName && (
+          <MenuItem onClick={handleSign}>
+            <Link href="/profile">{userName}님</Link>
+          </MenuItem>
+        )}
         {login ? (
           <MenuItem onClick={handleLogout}>
-          <Link href="/">
-            로그아웃
-          </Link>
-        </MenuItem>
+            <Link href="/">로그아웃</Link>
+          </MenuItem>
         ) : (
           <MenuItem onClick={handleSign}>
-          <Link href="/sign">
-            로그인
-          </Link>
+            <Link href="/sign">로그인</Link>
           </MenuItem>
         )}
       </MenuContainer>

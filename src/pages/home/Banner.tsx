@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import requests from "../../../apis/requests";
+import requests from "../../apis/requests";
 import styled from "styled-components";
 import { slate, slateA, slateDark, slateDarkA } from "@radix-ui/colors";
 import { useRouter } from "next/router";
-import Rating from "../../layout/Rating";
-import { formatTitle } from "../../../apis/formatTitle";
+import Rating from "../layout/Rating";
+import { formatTitle } from "../../apis/formatTitle";
 
 interface Movie {
   movieId: number;
@@ -170,7 +170,7 @@ const Banner: React.FC = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch(`/api${requests.fetchDQsPick}`);
+      const res = await fetch(`/api${requests.fetchTopMovies}`);
       const data = await res.json();
       const randomIndex = Math.floor(Math.random() * data.result.length);
       setMovie(data.result[randomIndex]);
