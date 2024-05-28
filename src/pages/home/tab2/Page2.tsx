@@ -61,32 +61,32 @@ const Page2: React.FC = () => {
     setPersonalizeUrl(url);
   };
 
-  useEffect(() => {
-    // 각 장르별로 영화 데이터를 가져오는 함수
-    const fetchMoviesByGenre = async (genre: string) => {
-      try {
-        const response = await axios.get(`${API_URL}/movies?genre=${encodeURIComponent(genre)}`);
-        return response.data;
-      } catch (error) {
-        console.error('Failed to fetch movies:', error);
-        return [];
-      }
-    };
+  // useEffect(() => {
+  //   // 각 장르별로 영화 데이터를 가져오는 함수
+  //   const fetchMoviesByGenre = async (genre: string) => {
+  //     try {
+  //       const response = await axios.get(`${API_URL}/movies/genres/${genre}`);
+  //       return response.data;
+  //     } catch (error) {
+  //       console.error('Failed to fetch movies:', error);
+  //       return [];
+  //     }
+  //   };
 
-    // 모든 장르에 대해 데이터를 가져와 상태에 저장
-    const loadMovies = async () => {
-      const newMoviesByGenre = new Map<string, Movie[]>();
+  //   // 모든 장르에 대해 데이터를 가져와 상태에 저장
+  //   const loadMovies = async () => {
+  //     const newMoviesByGenre = new Map<string, Movie[]>();
 
-      for (const genre of genres) {
-        const movies = await fetchMoviesByGenre(genre);
-        newMoviesByGenre.set(genre, movies);
-      }
+  //     for (const genre of genres) {
+  //       const movies = await fetchMoviesByGenre(genre);
+  //       newMoviesByGenre.set(genre, movies);
+  //     }
 
-      setMoviesByGenre(newMoviesByGenre);
-    };
+  //     setMoviesByGenre(newMoviesByGenre);
+  //   };
 
-    loadMovies();
-  }, []);
+  //   loadMovies();
+  // }, []);
 
   return (
     <div className="app">
@@ -96,7 +96,7 @@ const Page2: React.FC = () => {
         fetchUrl={requests.fetchActionMovies}
         addRating={addRating}
       />
-      <Row
+      {/* <Row
         title="코미디"
         id="CM"
         fetchUrl={requests.fetchComedyMovies}
@@ -197,7 +197,7 @@ const Page2: React.FC = () => {
         id="WE"
         fetchUrl={requests.fetchWesternMovies}
         addRating={addRating}
-      />
+      /> */}
     </div>
   );
 };

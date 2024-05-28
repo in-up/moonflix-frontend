@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import RowInfo from '../layout/RowInfo'; // Corrected import path
 
 interface SearchProp {
-  word: string;
+  genre: string;
+  year: number | null;
+  sorting: boolean;
 }
 
 interface Movie {
@@ -13,14 +15,6 @@ interface Movie {
   rating_avg: number;
   rating_count: number;
 }
-
-const NoResults = styled.div`
-  text-align: center;
-  font-size: 1.25rem;
-  color: white;
-  margin: 1rem;
-  font-weight: 600;
-`;
 
 const Container = styled.div`
   display: flex;
@@ -50,47 +44,78 @@ const PaginationButton = styled.button`
   }
 `;
 
-const SearchResult: React.FC<SearchProp> = ({ word }) => {
+const Results = styled.div`
+  text-align: center;
+  font-size: 2.25rem;
+  color: white;
+  margin: 1rem;
+  font-weight: 600;
+`;
+
+const GenreResult: React.FC<SearchProp> = ({ genre, year, sorting }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const baseUrl = "/api/filter_movies/";
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch(`/api/search/?query=${word}`);
+        const yearParam = year ? `&year=${year}` : '';
+        const sortParam = sorting ? '&sort_by_year=true' : '&sort_by_year=false';
+        const res = await fetch(`${baseUrl}?genre=${genre}${yearParam}${sortParam}`);
         const data = await res.json();
         setMovies(data.result);
+        setCurrentPage(1); // 페이지를 초기화
+        console.log(data.result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
 
     fetchData();
-  }, [word]);
+  }, [genre, year, sorting]);
 
   useEffect(() => {
-    // Reset to page 1 when `word` changes
+    // Reset to page 1 when `genre` changes
     setCurrentPage(1);
-  }, [word]);
+  }, [genre]);
+
+  const totalPages = Math.ceil(movies.length / itemsPerPage);
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
   const handlePreviousPage = () => {
     setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
   };
 
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentMovies = movies.slice(startIndex, endIndex);
 
+  let pageNumbersToShow: number[] = [];
+
+  if (totalPages <= 5) {
+    pageNumbersToShow = Array.from({ length: totalPages }, (_, i) => i + 1);
+  } else if (currentPage <= 3) {
+    pageNumbersToShow = [1, 2, 3, 4, 5];
+  } else if (currentPage >= totalPages - 2) {
+    pageNumbersToShow = [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+  } else {
+    pageNumbersToShow = [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2];
+  }
+
   return (
     <Container>
-      {movies.length > 0 ? (
+      <Results>{genre}</Results>
+      {movies.length > 0 && (
         <>
-          <NoResults>{movies.length}개의 영화를 찾았어요.</NoResults>
           {currentMovies.map((movie) => (
             <RowInfo
               key={movie.tmdbId}
@@ -108,19 +133,26 @@ const SearchResult: React.FC<SearchProp> = ({ word }) => {
             >
               이전
             </PaginationButton>
+            {pageNumbersToShow.map((pageNumber) => (
+              <PaginationButton
+                key={pageNumber}
+                onClick={() => handlePageChange(pageNumber)}
+                disabled={pageNumber === currentPage}
+              >
+                {pageNumber}
+              </PaginationButton>
+            ))}
             <PaginationButton
               onClick={handleNextPage}
-              disabled={endIndex >= movies.length}
+              disabled={currentPage === totalPages}
             >
               다음
             </PaginationButton>
           </PaginationControls>
         </>
-      ) : (
-        <NoResults>검색 결과가 없습니다.</NoResults>
       )}
     </Container>
   );
 };
 
-export default SearchResult;
+export default GenreResult;

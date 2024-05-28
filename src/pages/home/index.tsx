@@ -6,6 +6,7 @@ import Page1 from "./tab1/Page1";
 import Page2 from "./tab2/Page2";
 import Page3 from "./tab3/Page3";
 import Footer from "../layout/Footer"
+import { useRouter } from "next/router";
 
 const Main = styled.main`
   position: relative;
@@ -19,13 +20,14 @@ const Main = styled.main`
 const App: React.FC = () => {
   const pageTitle = '영화달 MOONFLIX - 홈';
   const [currentPage, setCurrentPage] = useState("tab1");
+  const router = useRouter();
 
   const renderPage = () => {
     switch (currentPage) {
       case "tab1":
         return <Page1 />;
       case "tab2":
-        return <Page2 />;
+        router.push("/genre");
       case "tab3":
         return <Page3 />;
       default:
