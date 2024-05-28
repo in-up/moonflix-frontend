@@ -11,6 +11,7 @@ import Credits from "./Credits";
 import Rating from "../layout/Rating";
 import Comment from "./Comment";
 import { slateDark } from "@radix-ui/colors";
+import Footer from "../layout/Footer";
 import Itembase from "./Itembase";
 
 interface MovieInfo {
@@ -63,7 +64,7 @@ const Divider = styled.div`
 `;
 
 const MovieInfo = styled.div`
-  margin: 1rem;
+  margin: 2rem;
   display: flex;
 `;
 
@@ -78,6 +79,18 @@ const Box = styled.div`
 
   div {
     margin-left: 1rem;
+  }
+`;
+
+const BannerRating = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    margin: 0 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
   }
 `;
 
@@ -97,7 +110,7 @@ const Movie: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const [movie, setMovie] = useState<MovieInfo | null>(null);
-  const tmdbId = typeof id === "string" ? parseInt(id, 10) : -1; // 문자열 id를 number로 변환
+  const tmdbId = typeof id === "string" ? parseInt(id, 10) : -1;
   const [personalizeUrl, setPersonalizeUrl] = useState<string>(
     "/item-based/" + id
   );
@@ -142,7 +155,7 @@ const Movie: React.FC = () => {
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <Header/>
+      <Header />
       <Main>
         <StyledContainer>
           <Backdrop
@@ -152,15 +165,10 @@ const Movie: React.FC = () => {
           />
           <div>
             <MovieInfo>
-              <Box>
-                <div>
-                  <Rating rating={movie.vote_average} size={30} />
-                </div>
-                <BoxText>
-                  {Math.round(movie.vote_average * 10)}%의 사용자가 긍정적으로
-                  평가했습니다!
-                </BoxText>
-              </Box>
+              <BannerRating>
+                <Rating rating={movie.vote_average} size={45} />
+                <p>{Math.round(movie.vote_average * 10)}%</p>
+              </BannerRating>
             </MovieInfo>
             {/* <MovieInfo>
               <Box>
@@ -177,6 +185,7 @@ const Movie: React.FC = () => {
             />
             {id && <Comment id={id as string} />}
           </div>
+          <Footer />
         </StyledContainer>
       </Main>
     </>

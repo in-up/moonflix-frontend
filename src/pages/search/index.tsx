@@ -1,10 +1,10 @@
 // pages/search/index.tsx
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
-import styled from 'styled-components';
-import Header from '../layout/Header';
+import React, { useState } from "react";
+import { useRouter } from "next/router";
+import Head from "next/head";
+import styled from "styled-components";
+import Header from "../layout/Header";
 
 const Main = styled.main`
   position: relative;
@@ -14,7 +14,10 @@ const Main = styled.main`
   width: 100%;
   height: 100vh;
   background-position: center;
-  font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+    "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", sans-serif;
   @media (max-width: 768px) {
     top: 5rem;
   }
@@ -60,8 +63,8 @@ const SearchButton = styled.button`
 `;
 
 const SearchPage: React.FC = () => {
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState('tab1');
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState("tab1");
   const router = useRouter();
 
   const handleSearch = () => {
@@ -71,7 +74,7 @@ const SearchPage: React.FC = () => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -81,7 +84,7 @@ const SearchPage: React.FC = () => {
       <Head>
         <title>영화달 MOONFLIX - 검색</title>
       </Head>
-      <Header/>
+      <Header />
       <Main>
         <SearchContainer>
           <SearchInput

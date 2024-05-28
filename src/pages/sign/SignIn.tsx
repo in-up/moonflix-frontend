@@ -2,7 +2,7 @@ import React, { useState, SyntheticEvent } from "react";
 import styled from "styled-components";
 import supabase from "../../apis/supabaseClient";
 import { signIn, signUp } from "@/apis/auth";
-import { getUserName } from "@/apis/userinfo";
+import { getUserName } from "@/apis/auth";
 import { useRouter } from "next/router";
 import TextArea from "../layout/TextArea";
 import { slate, orange } from "@radix-ui/colors";
@@ -83,9 +83,13 @@ const SignIn = () => {
 
     const signInResult = await signIn(email, password);
     if (signInResult) {
-      const name = getUserName();
-      setUserName(name);
-      router.push("/");
+      const name = await getUserName();
+      console.log("이름: " + name);
+      if (name === null || name === undefined) {
+        router.push("/sign/first");
+      } else {
+        router.push("/");
+      }
     } else {
       const { error } = await supabase.auth.signInWithPassword({
         email,

@@ -1,7 +1,8 @@
-// components/Comment.tsx
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import supabase from '@/apis/supabaseClient';
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import supabase from "@/apis/supabaseClient";
+import { slateDarkA } from "@radix-ui/colors";
+import TextArea from "../layout/TextArea";
 
 interface CommentProps {
   id: string;
@@ -17,91 +18,92 @@ interface Comment {
 }
 
 const CommentFormContainer = styled.form`
-  margin-top: 20px;
-  border: 1px solid #78798c;
-  border-radius: 8px;
+  margin: 1rem;
+  border-radius: 20px;
   padding: 15px;
-  background: #37384e;
+  background: ${slateDarkA.slateA2};
   position: relative;
-`;
 
-const CommentTextArea = styled.textarea`
-  width: 97%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #78798c;
-  border-radius: 8px;
-  background: #78798c;
-  color: #D0D0D0;
-  resize: none;
-  &::placeholder {
-    color: #D0D0D0;
+  .form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
   }
-  &:hover {
-    cursor: text;
+  .input {
+    width: 85%;
   }
 `;
 
 const SubmitButton = styled.button`
-  padding: 10px 15px;
-  background-color: #78798c;
-  color: white;
+  font-family: "Pretendard", Pretendard;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 1rem 1.5rem;
+  margin: 0.5rem;
+  background-color: ${slateDarkA.slateA12};
+  color: black;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
   &:hover {
-    background-color: #6a6b7c;
+    background-color: ${slateDarkA.slateA11};
   }
 `;
 
 const CommentsContainer = styled.div`
-  margin-top: 20px;
-  border: 1px solid #78798c;
-  border-radius: 8px;
+  margin: 1rem;
+  border-radius: 20px;
   padding: 15px;
-  background: #37384e;
+  background: ${slateDarkA.slateA3};
+
+  .no-comments {
+    margin-left: 1rem;
+  }
 `;
 
 const UserCommentContainer = styled.div`
-  background-color: #78798c;
   border-radius: 8px;
   margin-bottom: 10px;
   padding: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid ${slateDarkA.slateA6};
 `;
 
 const CommentUser = styled.strong`
   display: block;
-  color: #333;
+  color: ${slateDarkA.slateA12};
   margin-bottom: 5px;
 `;
 
 const CommentContent = styled.p`
   white-space: pre-wrap;
-  color: #333;
+  color: ${slateDarkA.slateA12};
+  padding-top: 0.5rem;
+
+  .text {
+    padding: 0.25rem 0;
+  }
 `;
 
 const RatingStars = styled.div`
   display: flex;
-  margin: 10px 0;
+  margin: 0.25rem 0.5rem;
   cursor: pointer;
 `;
 
-const LoginStatusMessage = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  color: #D0D0D0;
-  font-size: 0.9rem;
+const RatingImage = styled.img`
+  width: 24px; /* 적절한 크기로 조정 */
+  height: 24px; /* 적절한 크기로 조정 */
 `;
 
 const Comment: React.FC<CommentProps> = ({ id }) => {
-  const fullMoon = '🌕';
-  const halfMoon = '🌗';
-  const newMoon = '🌑';
+  const fullMoonSrc = "/rating/m5.png";
+  const halfMoonSrc = "/rating/m3.png";
+  const newMoonSrc = "/rating/m1.png";
 
   const [comments, setComments] = useState<Comment[]>([]);
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(10);
   const [comment, setComment] = useState("");
   const [user, setUser] = useState<null | { id: string; email?: string }>(null);
 
@@ -109,40 +111,60 @@ const Comment: React.FC<CommentProps> = ({ id }) => {
     const fetchComments = async () => {
       try {
         const { data: commentsData, error: commentsError } = await supabase
-          .from('useritem')
-          .select('*')
-          .eq('movie_id', parseInt(id, 10));
+          .from("useritem")
+          .select("*")
+          .eq("movie_id", parseInt(id, 10));
 
         if (commentsError) {
           throw new Error(`Failed to fetch comments: ${commentsError.message}`);
         }
 
-        if (commentsData && commentsData.length > 0) {
+        if (commentsData) {
           setComments(commentsData);
         } else {
-          console.log('No comments data received or empty array');
+          console.log("No comments data received or empty array");
         }
       } catch (error) {
-        console.error('Error in fetching comments:', error);
+        console.error("Error in fetching comments:", error);
       }
     };
 
     fetchComments();
   }, [id]);
 
+  useEffect(() => {
+    const checkUserSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session && session.user) {
+        setUser({ id: session.user.id, email: session.user.email });
+      } else {
+        setUser(null);
+      }
+    };
+
+    checkUserSession();
+  }, []);
+
   const handleRatingClick = (index: number) => {
-    const newRating = rating === (index * 2 + 1) ? (index + 1) * 2 : (index * 2 + 1);
+    const newRating =
+      rating === index * 2 + 1 ? (index + 1) * 2 : index * 2 + 1;
     setRating(newRating);
   };
 
-  const handleCommentSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleCommentSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
     if (!session || !session.user) {
-      console.error('User is not logged in.');
-      alert('로그인 후 이용해주세요.');
+      console.error("User is not logged in.");
+      alert("로그인 후 이용해주세요.");
       return;
     }
 
@@ -155,7 +177,7 @@ const Comment: React.FC<CommentProps> = ({ id }) => {
 
     try {
       const { data: insertData, error: insertError } = await supabase
-        .from('useritem')
+        .from("useritem")
         .insert([commentData]);
 
       if (insertError) {
@@ -163,84 +185,96 @@ const Comment: React.FC<CommentProps> = ({ id }) => {
       }
 
       const { data: freshComments, error: fetchError } = await supabase
-        .from('useritem')
-        .select('*')
-        .eq('movie_id', parseInt(id, 10));
+        .from("useritem")
+        .select("*")
+        .eq("movie_id", parseInt(id, 10));
 
       if (fetchError) {
-        throw new Error(`Failed to fetch updated comments: ${fetchError.message}`);
+        throw new Error(
+          `Failed to fetch updated comments: ${fetchError.message}`
+        );
       }
 
       setComments(freshComments || []);
-      setComment('');
+      setComment("");
       setRating(0);
-      alert('댓글이 등록되었습니다.');
+      alert("댓글이 등록되었습니다.");
     } catch (error) {
-      console.error('Failed to submit:', error instanceof Error ? error.message : error);
-      alert(`댓글 등록에 실패했습니다: ${error instanceof Error ? error.message : "알 수 없는 오류"}`);
+      console.error(
+        "Failed to submit:",
+        error instanceof Error ? error.message : error
+      );
+      alert(
+        `댓글 등록에 실패했습니다: ${
+          error instanceof Error ? error.message : "알 수 없는 오류"
+        }`
+      );
     }
   };
-  
-    const checkUserSession = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session && session.user) {
-        setUser({ id: session.user.id, email: session.user.email });
-    } else {
-        setUser(null);
-    }
-    };
-
-    checkUserSession();
 
   const displayRating = (rating: number) => {
     const stars = [];
     for (let i = 0; i < 5; i++) {
       if (rating >= (i + 1) * 2) {
-        stars.push(fullMoon);
-      } else if (rating === (i * 2) + 1) {
-        stars.push(halfMoon);
+        stars.push(<RatingImage key={i} src={fullMoonSrc} alt="Full Moon" />);
+      } else if (rating === i * 2 + 1) {
+        stars.push(<RatingImage key={i} src={halfMoonSrc} alt="Half Moon" />);
       } else {
-        stars.push(newMoon);
+        stars.push(<RatingImage key={i} src={newMoonSrc} alt="New Moon" />);
       }
     }
-    return stars.join('');
+    return stars;
   };
 
   return (
     <>
       <CommentFormContainer onSubmit={handleCommentSubmit}>
-        <LoginStatusMessage>
-          {user ? `[${user.email ? user.email : 'Unknown'}]님 환영합니다. 평점을 남겨주세요!` : '로그인 후 이용해주세요'}
-        </LoginStatusMessage>
         <RatingStars>
           {Array.from({ length: 5 }).map((_, index) => (
             <span key={index} onClick={() => handleRatingClick(index)}>
-              {index * 2 < rating ? (index * 2 + 1 === rating ? halfMoon : fullMoon) : newMoon}
+              {index * 2 < rating ? (
+                index * 2 + 1 === rating ? (
+                  <RatingImage src={halfMoonSrc} alt="Half Moon" />
+                ) : (
+                  <RatingImage src={fullMoonSrc} alt="Full Moon" />
+                )
+              ) : (
+                <RatingImage src={newMoonSrc} alt="New Moon" />
+              )}
             </span>
           ))}
+          <p></p>
         </RatingStars>
-        <CommentTextArea
-          value={comment}
-          onChange={e => setComment(e.target.value)}
-          placeholder="Leave a comment (Optional)"
-          rows={3}
-        />
-        <SubmitButton type="submit">남기기</SubmitButton>
+        <div className="form">
+          <div className="input">
+            <TextArea
+              type="text"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder={
+                user ? `감상평을 남겨주세요.` : "로그인이 필요합니다."
+              }
+            />
+          </div>
+          <SubmitButton type="submit">등록</SubmitButton>
+        </div>
       </CommentFormContainer>
       <CommentsContainer>
         {comments.length > 0 ? (
-          comments.map(comment => (
+          comments.map((comment) => (
             <UserCommentContainer key={comment.id}>
-              <CommentUser>User: {comment.user_id}</CommentUser>
+              <CommentUser>{comment.user_id}</CommentUser>
               <CommentContent>
                 {displayRating(comment.rating)}
                 <br />
-                {comment.comment}
+                <p className="text">{comment.comment}</p>
               </CommentContent>
             </UserCommentContainer>
           ))
         ) : (
-          <p>No comments available</p>
+          <p className="no-comments">
+            감상평이 없습니다. 첫 감상평을 남겨주세요 😃
+          </p>
         )}
       </CommentsContainer>
     </>
