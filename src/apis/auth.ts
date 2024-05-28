@@ -2,8 +2,8 @@
 import { createClient, AuthChangeEvent, AuthResponse, User } from '@supabase/supabase-js';
 import { fetchUserMovieStatus } from './userinfo';
 
-const supabaseUrl = process.env.SUPABASE_URL || ''; // 환경변수 설정 필요
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''; // 환경변수 설정 필요
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface SessionData {
