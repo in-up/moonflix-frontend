@@ -2,8 +2,8 @@
 import { createClient, AuthChangeEvent, AuthResponse, User } from '@supabase/supabase-js';
 import { fetchUserMovieStatus } from './userinfo';
 
-const supabaseUrl = process.env.SUPABASE_URL || ''; // 환경변수 설정 필요
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''; // 환경변수 설정 필요
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface SessionData {
@@ -85,6 +85,29 @@ function getTokenDataFromStorage(): SessionData | null {
 export function getUserId(): string | undefined {
   const tokenData = getTokenDataFromStorage();
   return tokenData?.userId;
+}
+
+export async function getUserName(): Promise<string | null> {
+  try {
+    const userId = getUserId();
+    if (!userId) return null;
+
+    const { data, error } = await supabase
+      .from('userdata')
+      .select('user_name')
+      .eq('user_id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching user name:', error.message);
+      return null;
+    }
+
+    return data?.user_name || null;
+  } catch (error: any) {
+    console.error('Error fetching user name:', error.message);
+    return null;
+  }
 }
 
 export function getSessionData(): SessionData | null {

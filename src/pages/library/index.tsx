@@ -1,35 +1,32 @@
 import React, { useState } from "react";
-import Head from "next/head";
 import styled from "styled-components";
 import Header from "../layout/Header";
-import Page1 from "./Page1";
-import Footer from "../layout/Footer";
 
 const Main = styled.main`
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  background-position: center;
+  color: white;
+  padding-top: 3rem;
   font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont,
     system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
     "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol", sans-serif;
 `;
 
-const App: React.FC = () => {
-  const pageTitle = "영화달 MOONFLIX - 홈";
-  const [currentPage, setCurrentPage] = useState("tab1");
+const StyledContainer = styled.div`
+  margin: 3rem;
+`;
+
+const LibraryPage = () => {
+  const [currentPage, setCurrentPage] = useState("tab3");
 
   return (
     <Main>
-      <Head>
-        <title>{pageTitle}</title>
-      </Head>
       <Header />
-      <Page1 />
-      <Footer />
+      <StyledContainer>
+        <h1>내 보관함</h1>
+        <p>예정</p>
+      </StyledContainer>
     </Main>
   );
 };
 
-export default App;
+export default LibraryPage;

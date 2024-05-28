@@ -1,8 +1,8 @@
 import { useRouter } from "next/router"; // useRouter import 추가
 import React, { useEffect, useState } from "react";
-import requests from "../../../apis/requests";
+import requests from "../../apis/requests";
 import Banner from "./Banner";
-import Row from "../../layout/Row";
+import Row from "../layout/Row";
 import { isAuthenticated } from "@/apis/auth";
 import { getUserId } from "@/apis/userinfo";
 import axios from "axios";
@@ -65,7 +65,7 @@ const Page1: React.FC = () => {
       <Row
         title="TOP 콘텐츠"
         id="DP"
-        fetchUrl={requests.fetchDQsPick}
+        fetchUrl={requests.fetchTopMovies}
         addRating={addRating}
       />
       {login && requestResult && (

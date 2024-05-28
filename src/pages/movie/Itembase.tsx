@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import Poster from "../layout/Poster";
+import Poster from "../layout/PosterItem";
 import styled from "styled-components";
 import { slate } from "@radix-ui/colors";
 
@@ -55,7 +55,7 @@ const RowPosters = styled.div`
 
 const RowPoster = styled.div`
   flex-shrink: 0;
-  width: 200px;
+  width: 150px;
   margin-right: 10px;
   transition: transform 450ms;
   border-radius: 4px;
@@ -159,7 +159,7 @@ const Itembase: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
                   alt={movie.title}
                   width={imgWidth}
                   height={imgHeight}
-                  isNoUse={false}
+                  hovering={false}
                 />
                 <div className="poster-title">{movie.title}</div>
               </RowPoster>

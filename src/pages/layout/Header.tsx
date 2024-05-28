@@ -71,12 +71,10 @@ const DropdownContainer = styled.div`
   align-items: center;
 `;
 
-const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({
-  setCurrentPage,
-}) => {
+const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("tab1");
   const [scroll, setScroll] = useState(false);
+  const [activeTab, setActiveTab] = useState("tab1"); // 초기값은 "tab1"로 설정
   const router = useRouter();
 
   useEffect(() => {
@@ -94,13 +92,36 @@ const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({
     };
   }, []);
 
+  // 현재 경로를 가져와서 해당 경로에 따라 activeTab 상태를 설정
+  useEffect(() => {
+    const path = router.asPath;
+    if (path === "/") {
+      setActiveTab("tab1");
+    } else if (path === "/genre") {
+      setActiveTab("tab2");
+    } else if (path === "/library") {
+      setActiveTab("tab3");
+    }
+  }, [router.asPath]);
+
   const handleSearchButtonClick = () => {
-    setCurrentPage("home");
     router.push("/search");
   };
+
   const handleProfileButtonClick = () => {
-    setCurrentPage("home");
     router.push("/profile");
+  };
+
+  const handleHomeButtonClick = () => {
+    router.push("/");
+  };
+
+  const handleGenreButtonClick = () => {
+    router.push("/genre");
+  };
+
+  const handleLibraryButtonClick = () => {
+    router.push("/library");
   };
 
   return (
@@ -109,28 +130,19 @@ const Header: React.FC<{ setCurrentPage: (page: string) => void }> = ({
       <RightSection>
         <button
           className={activeTab === "tab1" ? "active" : ""}
-          onClick={() => {
-            setCurrentPage("tab1");
-            setActiveTab("tab1");
-          }}
+          onClick={handleHomeButtonClick}
         >
           홈
         </button>
         <button
           className={activeTab === "tab2" ? "active" : ""}
-          onClick={() => {
-            setCurrentPage("tab2");
-            setActiveTab("tab2");
-          }}
+          onClick={handleGenreButtonClick}
         >
           장르별 추천
         </button>
         <button
           className={activeTab === "tab3" ? "active" : ""}
-          onClick={() => {
-            setCurrentPage("tab3");
-            setActiveTab("tab3");
-          }}
+          onClick={handleLibraryButtonClick}
         >
           내 보관함
         </button>

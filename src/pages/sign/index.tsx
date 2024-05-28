@@ -1,227 +1,115 @@
-import React, { useState, SyntheticEvent } from 'react';
-import styled from 'styled-components';
-import supabase from '../../apis/supabaseClient';
-import { signIn, signUp } from '@/apis/auth';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
-import Header from '../layout/Header';
-import { fetchUserMovieStatus, getUserName } from '@/apis/userinfo';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { useRouter } from "next/router";
+import Head from "next/head";
+import Header from "../layout/Header";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp"; // SignUp 컴포넌트를 불러옵니다.
+import { slateDarkA } from "@radix-ui/colors";
 
 const Main = styled.main`
   position: relative;
   width: 100%;
-  height: 100vh;
   background-position: center;
-  font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+    "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", sans-serif;
   margin-top: 6rem;
+  display: flex;
+  justify-content: center;
+  color: white;
 `;
 
-// 로고 스타일
-const Logo = styled.img`
-  display: block;
-  width: 250px;
-  margin: 0 auto;
-  margin-bottom: 20px;
-  padding-top: 50px;
-`;
-
-// 로그인 컨테이너 스타일
-const LoginContainer = styled.div`
-  font-family: Arial, sans-serif;
+const StyledContainer = styled.div`
+  background-color: ${slateDarkA.slateA5};
+  border-radius: 36px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 75vh;
-  position: relative; /* 추가된 스타일 */
+  width: 60vw;
+  max-width: 700px;
+  margin: 5rem;
+  @media (max-width: 768px) {
+    width: 90vw;
+    margin: 1rem;
+  }
 `;
 
-const FormContainer = styled.div`
-  background-color: rgb(18, 17, 22, 0.64);
-  padding: 20px;
-  border-radius: 10%;
-  box-shadow: 0px 2px 5px 0px black;
-  width: 20%; /* 폼 컨테이너의 너비 */
-  height: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px; /* 입력 필드의 폰트 크기 */
-`;
-
-const LoginTitle = styled.h1`
-  color: #f0e68c;
-  font-weight: 800;
-  text-align: left;
-  padding: 0;
-  margin-left: 5px;
-  margin-top: 0.5rem;
-  margin-bottom: -2rem;
-  font-family: 'Inter', sans-serif;
-  font-size: 70px; /* ID와 Password 입력 필드의 폰트 크기 */
-  z-index: 1;
-`;
-
-const InputTitle = styled.h3`
-  color: white;
-  font-weight: 800;
-  text-align: left;
-  padding: 0;
-  margin-left: 5px;
-  margin-top: 0.5rem;
-  margin-bottom: 0px;
-  font-family: 'Inter', sans-serif;
-  font-size: 34px; /* ID와 Password 입력 필드의 폰트 크기 */
-`;
-
-const InputField = styled.input`
-  margin-left: 0.2rem; /* 비율 수정 */
-  width: 90%;
-  padding: 0.5rem;
-  border-radius: 10px;
-  font-size: 24px; /* ID와 Password 입력 필드의 폰트 크기 */
-`;
-
-const InputLabel = styled.label`
-  background-color: #f0e68c;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
-  padding: 10px;
-  width: 50%;
-  margin-right: 1%; /* 간격 유지 */
-  box-shadow: 0px 2px 5px 0px black;
-`;
-
-
-const ButtonLogin = styled.button`
-  width: 100%;
-  padding: 8px;
-  margin-top: 1rem;
-  background-color: #395a7a;
-  color: #f1f3f5;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  box-shadow: 0px 2px 5px 0px black;
-  transition: transform 0.3s ease-in-out;
-  font-size: 18px;
-`;
-
-const ButtonSignUp = styled.button`
-  width: 100%;
-  padding: 8px;
-  margin-top: 0.6rem;
-  margin-bottom: 0.5rem;
-  background-color: #8097a6;
-  color: #f1f3f5;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  box-shadow: 0px 2px 5px 0px black;
-  transition: transform 0.3s ease-in-out;
-  font-size: 18px;
-`;
-
-const Message = styled.div`
-  color: #ffffff;
-  background-color: #333333;
-  padding: 10px;
-  border-radius: 4px;
-  margin-top: 10px;
+const TitleText = styled.div`
+  font-size: 1.75rem;
+  font-weight: 600;
   text-align: center;
-  cursor: pointer;
+  margin: 2rem;
+  padding-top: 2rem;
+
+  i {
+    font-weight: 300;
+    margin-right: 0.75rem;
+  }
 `;
 
-const SessionStatus = styled.div`
-  color: green;
-  background-color: #ccffcc;
-  padding: 10px;
-  border-radius: 4px;
-  margin-top: 10px;
+const DetailText = styled.div`
+  font-size: 0.9rem;
+  font-weight: 400;
   text-align: center;
+  margin: 1.5rem;
+
+  div {
+    margin: 0.75rem;
+    transition: opacity 0.2s ease;
+    &:hover {
+      cursor: pointer;
+      opacity: calc(0.8);
+    }
+  }
 `;
 
 const Sign = () => {
-  const pageTitle = '영화달 MOONFLIX - 로그인';
-  const router = useRouter(); 
+  const pageTitle = "영화달 MOONFLIX - 로그인";
+  const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [userName, setUserName] = useState<string | null>();
-  const [currentPage, setCurrentPage] = useState("MovieInfo");
-  var name = '';
+  const [currentPage, setCurrentPage] = useState("SignIn"); // 초기값을 SignIn으로 설정합니다.
 
-  const handleLogin = async (e: SyntheticEvent) => {
-    e.preventDefault();
-    
-    const signInResult = await signIn(email, password);
-    if (signInResult) {
-      setMessage('로그인이 완료되었습니다!');
-      var name = getUserName();
-      setUserName(name); // 로그인한 사용자의 이메일 저장
-      alert('로그인이 완료되었습니다!');
-      router.push('/');
+  const handleSignUpClick = () => {
+    if (currentPage === "SignIn") {
+      setCurrentPage("SignUp");
     } else {
-      setMessage('로그인에 실패했습니다.');
-      
+      setCurrentPage("SignIn");
     }
-  };
-
-  const handleSignup = async (e: SyntheticEvent) => {
-    e.preventDefault();
-    const signUpResult = await signUp(email, password);
-    if (signUpResult) {
-      setMessage('회원 가입이 완료되었습니다!');
-      setUserName(email); // 회원 가입 후 자동 로그인 처리
-    } else {
-      setMessage(`회원 가입에 실패했습니다`);
-    }
-  };
-  
-  // Sign 페이지로 이동하는 함수
-  const goToSignPage = () => {
-    router.push('/sign');
   };
 
   return (
     <>
-    <Head>
+      <Head>
         <title>{pageTitle}</title>
       </Head>
-      <Header setCurrentPage={setCurrentPage} />
+      <Header />
       <Main>
-      <LoginContainer>
-      <LoginTitle>Moonflix</LoginTitle>
-        <FormContainer> {/* 폼을 감싸는 추가적인 컨테이너 */}
-          <form>
-            <div className="input-group">
-              <InputTitle>ID</InputTitle>
-              <InputField
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-              />
-            </div>
-            <div className="input-group">
-              <InputTitle>Password</InputTitle>
-              <InputField
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-              />
-            </div>
-            <ButtonLogin onClick={handleLogin}>Login</ButtonLogin>
-            <ButtonSignUp onClick={handleSignup}>Sign Up</ButtonSignUp>
-          </form>
-        </FormContainer>
-        {message && <Message onClick={() => setMessage('')}>{message}</Message>}
-        {userName && <SessionStatus>{userName}님 환영합니다!</SessionStatus>}
-        {/* <button onClick={goToSignPage}>Go to Sign page</button>  */}
-        {/* 페이지 이동 버튼 */}
-      </LoginContainer>
+        {currentPage === "SignIn" ? (
+          <StyledContainer>
+            <TitleText>
+              <i className="ri-login-box-line"></i>로그인
+            </TitleText>
+            <SignIn />
+            <DetailText>
+              <div onClick={handleSignUpClick}>
+                아직 계정이 없으신가요? 회원가입
+              </div>
+              <div>비밀번호를 잊어버렸어요.</div>
+            </DetailText>
+          </StyledContainer>
+        ) : (
+          <StyledContainer>
+            <TitleText>
+              <i className="ri-sparkling-line"></i>회원가입
+            </TitleText>
+            <SignUp />
+            <DetailText>
+              <div onClick={handleSignUpClick}>이미 계정을 가지고 있어요.</div>
+              <div>비밀번호를 잊어버렸어요.</div>
+            </DetailText>
+          </StyledContainer>
+        )}
       </Main>
     </>
   );
