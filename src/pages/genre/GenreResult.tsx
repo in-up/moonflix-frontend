@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import RowInfo from '../layout/RowInfo'; // Corrected import path
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import List from "../layout/List"; // Corrected import path
 
 interface SearchProp {
   genre: string;
@@ -61,9 +61,13 @@ const GenreResult: React.FC<SearchProp> = ({ genre, year, sorting }) => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const yearParam = year ? `&year=${year}` : '';
-        const sortParam = sorting ? '&sort_by_year=true' : '&sort_by_year=false';
-        const res = await fetch(`${baseUrl}?genre=${genre}${yearParam}${sortParam}`);
+        const yearParam = year ? `&year=${year}` : "";
+        const sortParam = sorting
+          ? "&sort_by_year=true"
+          : "&sort_by_year=false";
+        const res = await fetch(
+          `${baseUrl}?genre=${genre}${yearParam}${sortParam}`
+        );
         const data = await res.json();
         setMovies(data.result);
         setCurrentPage(1); // 페이지를 초기화
@@ -106,9 +110,21 @@ const GenreResult: React.FC<SearchProp> = ({ genre, year, sorting }) => {
   } else if (currentPage <= 3) {
     pageNumbersToShow = [1, 2, 3, 4, 5];
   } else if (currentPage >= totalPages - 2) {
-    pageNumbersToShow = [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    pageNumbersToShow = [
+      totalPages - 4,
+      totalPages - 3,
+      totalPages - 2,
+      totalPages - 1,
+      totalPages,
+    ];
   } else {
-    pageNumbersToShow = [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2];
+    pageNumbersToShow = [
+      currentPage - 2,
+      currentPage - 1,
+      currentPage,
+      currentPage + 1,
+      currentPage + 2,
+    ];
   }
 
   return (
@@ -117,7 +133,7 @@ const GenreResult: React.FC<SearchProp> = ({ genre, year, sorting }) => {
       {movies.length > 0 && (
         <>
           {currentMovies.map((movie) => (
-            <RowInfo
+            <List
               key={movie.tmdbId}
               id={movie.tmdbId}
               title={movie.title}

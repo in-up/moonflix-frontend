@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Header from "../layout/Header";
 import Page1 from "./Page1";
 import Footer from "../layout/Footer";
+import { useRouter } from "next/router";
 
 const Main = styled.main`
   position: relative;

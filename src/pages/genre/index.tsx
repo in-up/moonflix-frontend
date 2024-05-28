@@ -1,248 +1,204 @@
-import { useRouter } from "next/router"; // useRouter import 추가
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import requests from "../../apis/requests";
-import Row from "../layout/Row";
+import React, { useState } from "react";
+import Head from "next/head";
 import styled from "styled-components";
 import Header from "../layout/Header";
-
-// 영화 데이터 타입 정의
-interface Movie {
-  id: number;
-  title: string;
-  genre: string;
-  poster_url: string;
-}
+import GenreResult from "./GenreResult";
+import { slate, slateDarkA } from "@radix-ui/colors";
 
 const Main = styled.main`
-  color: white;
-  padding-top: 3rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  top: 6rem;
+  width: 100%;
+  height: 100vh;
+  background-position: center;
   font-family: "Pretendard", Pretendard, -apple-system, BlinkMacSystemFont,
     system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
     "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol", sans-serif;
-`;
-
-const StyledContainer = styled.div``;
-
-// 스타일 컴포넌트 정의
-const MovieRow = styled.div`
-  display: flex;
-  overflow-x: auto;
-  padding: 10px;
-  scrollbar-width: thin;
-`;
-
-const MoviePoster = styled.img`
-  width: 150px;
-  height: 225px;
-  margin-right: 10px;
-  border-radius: 5px;
-  transition: transform 0.3s ease-in-out;
-  &:hover {
-    transform: scale(1.05);
+  @media (max-width: 768px) {
+    top: 5rem;
   }
 `;
 
-const GenreTitle = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  color: #333;
+const GenreContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  /* background-color: rgba(255, 255, 255, 0.25); */
+  border-radius: 16px;
+  padding: 8px 16px;
+  height: auto;
+  width: 80%;
+  max-width: 60vw;
+  margin: 1rem 20vw;
+  margin-top: 0;
+  @media (max-width: 768px) {
+    margin: 1rem;
+    max-width: 100vw;
+  }
 `;
 
-const API_URL = "http://127.0.0.1:8000";
+const YearContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  /* background-color: rgba(255, 255, 255, 0.25); */
+  border-radius: 16px;
+  padding: 8px 16px;
+  height: auto;
+  width: 45%;
+  max-width: 60vw;
+  margin: 1rem 20vw;
+  @media (max-width: 768px) {
+    margin: 1rem;
+    max-width: 100vw;
+  }
+`;
 
-// Page2 컴포넌트 정의
-const MoviePage: React.FC = () => {
-  const router = useRouter();
-  const [moviesByGenre, setMoviesByGenre] = useState<Map<string, Movie[]>>(
-    new Map()
-  );
-  const genres = [
-    "애니메이션",
-    "액션",
-    "코미디",
-    "드라마",
-    "로맨스",
-    "어드벤처",
-    "애니메이션",
-    "어린이",
-    "판타지",
-    "범죄",
-    "스릴러",
-    "전쟁",
-    "미스터리",
-    "SF",
-    "다큐멘터리",
-    "IMAX",
-    "느와르",
-    "뮤지컬",
-    "서부",
-  ]; // 필요한 장르 리스트
-  const { pathname, query } = router; // useRouter로 변경
-  const { asPath } = router; // 추가된 부분
+const Button = styled.button`
+  font-family: "Pretendard", Pretendard;
+  font-weight: 300;
+  background: ${slateDarkA.slateA6};
+  border: 0px;
+  border-radius: 14px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 4px;
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+`;
 
-  const searchParams = new URLSearchParams(asPath.split("?")[1]); // URLSearchParams에서 쿼리 파라미터 가져오기
+const ResultContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 60vw;
+  margin: 1rem 20vw;
+  @media (max-width: 768px) {
+    margin: 1rem;
+    max-width: 90vw;
+  }
+`;
 
-  const [personalizeUrl, setPersonalizeUrl] = useState<string>("/all");
-  const [myRating, setMyRating] = useState<number[]>([]);
+const SearchPage: React.FC = () => {
+  const [currentGenre, setCurrentGenre] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [key, setKey] = useState(0); // key state for re-rendering
 
-  const addRating = (rating: number) => {
-    const updatedRatings = [...myRating, rating];
-    setMyRating(updatedRatings);
-    const userBasedParams = updatedRatings.join("&params=");
-    const url = `/api/user-based/?params=${userBasedParams}`;
-    setPersonalizeUrl(url);
+  // 장르 버튼 클릭 시 해당 장르 설정 및 연도 초기화
+  const handleGenreButtonClick = (genre: string) => {
+    setCurrentGenre(genre);
+    setSelectedYear(null);
+    setKey((prevKey) => prevKey + 1); // update key to re-render
   };
 
-  useEffect(() => {
-    // 각 장르별로 영화 데이터를 가져오는 함수
-    const fetchMoviesByGenre = async (genre: string) => {
-      try {
-        const response = await axios.get(
-          `${API_URL}/movies?genre=${encodeURIComponent(genre)}`
-        );
-        return response.data;
-      } catch (error) {
-        console.error("Failed to fetch movies:", error);
-        return [];
-      }
-    };
-
-    // 모든 장르에 대해 데이터를 가져와 상태에 저장
-    const loadMovies = async () => {
-      const newMoviesByGenre = new Map<string, Movie[]>();
-
-      for (const genre of genres) {
-        const movies = await fetchMoviesByGenre(genre);
-        newMoviesByGenre.set(genre, movies);
-      }
-
-      setMoviesByGenre(newMoviesByGenre);
-    };
-
-    loadMovies();
-  }, []);
-
-  const [currentPage, setCurrentPage] = useState("tab2");
+  // 연도 버튼 클릭 시 해당 연도 설정
+  const handleYearButtonClick = (year: number) => {
+    setSelectedYear(year);
+    setKey((prevKey) => prevKey + 1); // update key to re-render
+  };
 
   return (
-    <Main>
-      <StyledContainer>
-        <Header />
-        <div className="app">
-          <Row
-            title="액션"
-            id="AM"
-            fetchUrl={requests.fetchActionMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="코미디"
-            id="CM"
-            fetchUrl={requests.fetchComedyMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="공포"
-            id="HM"
-            fetchUrl={requests.fetchHorrorMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="로맨스/멜로"
-            id="RM"
-            fetchUrl={requests.fetchRomanceMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="어드벤쳐"
-            id="AD"
-            fetchUrl={requests.fetchAdventureMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="애니메이션"
-            id="AN"
-            fetchUrl={requests.fetchAnimationMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="어린이"
-            id="CH"
-            fetchUrl={requests.fetchChildrenMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="판타지"
-            id="FT"
-            fetchUrl={requests.fetchFantasyMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="범죄"
-            id="CR"
-            fetchUrl={requests.fetchCrimeMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="스릴러"
-            id="TH"
-            fetchUrl={requests.fetchThrillerMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="드라마"
-            id="DR"
-            fetchUrl={requests.fetchDramaMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="전쟁"
-            id="WR"
-            fetchUrl={requests.fetchWarMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="미스터리"
-            id="MS"
-            fetchUrl={requests.fetchMysteryMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="SF"
-            id="SF"
-            fetchUrl={requests.fetchSciFiMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="IMAX"
-            id="IM"
-            fetchUrl={requests.fetchIMAXMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="누아르"
-            id="NR"
-            fetchUrl={requests.fetchFilmNoirMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="뮤지컬"
-            id="MU"
-            fetchUrl={requests.fetchMusicalMovies}
-            addRating={addRating}
-          />
-          <Row
-            title="서부"
-            id="WE"
-            fetchUrl={requests.fetchWesternMovies}
-            addRating={addRating}
-          />
-        </div>
-      </StyledContainer>
-    </Main>
+    <>
+      <Head>
+        <title>영화달 MOONFLIX - 검색</title>
+      </Head>
+      <Header />
+      <Main>
+        <ResultContainer>
+          {/* 장르별 버튼 영역 */}
+          <GenreContainer>
+            <Button onClick={() => handleGenreButtonClick("Action")}>
+              액션
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Comedy")}>
+              코미디
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Horror")}>
+              공포
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Romance")}>
+              로맨스/멜로
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Adventure")}>
+              어드벤쳐
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Animation")}>
+              애니메이션
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Children")}>
+              어린이
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Fantasy")}>
+              판타지
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Crime")}>
+              범죄
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Thriller")}>
+              스릴러
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Drama")}>
+              드라마
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("War")}>전쟁</Button>
+            <Button onClick={() => handleGenreButtonClick("Mystery")}>
+              미스터리
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Scifi")}>SF</Button>
+            <Button onClick={() => handleGenreButtonClick("Imax")}>IMAX</Button>
+            <Button onClick={() => handleGenreButtonClick("FilmNoir")}>
+              누아르
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Musical")}>
+              뮤지컬
+            </Button>
+            <Button onClick={() => handleGenreButtonClick("Western")}>
+              서부
+            </Button>
+            {/* 다른 장르 버튼들 추가 */}
+          </GenreContainer>
+
+          {/* 연도별 버튼 영역 - 장르가 선택된 경우에만 표시 */}
+          {currentGenre && (
+            <YearContainer>
+              <Button onClick={() => handleYearButtonClick(2018)}>2018</Button>
+              <Button onClick={() => handleYearButtonClick(2017)}>2017</Button>
+              <Button onClick={() => handleYearButtonClick(2016)}>2016</Button>
+              <Button onClick={() => handleYearButtonClick(2015)}>2015</Button>
+              <Button onClick={() => handleYearButtonClick(2014)}>2014</Button>
+              <Button onClick={() => handleYearButtonClick(2013)}>2013</Button>
+              <Button onClick={() => handleYearButtonClick(2012)}>2012</Button>
+              <Button onClick={() => handleYearButtonClick(2011)}>2011</Button>
+              <Button onClick={() => handleYearButtonClick(2010)}>2010</Button>
+              <Button onClick={() => handleYearButtonClick(2009)}>2009</Button>
+              <Button onClick={() => handleYearButtonClick(2008)}>2008</Button>
+              <Button onClick={() => handleYearButtonClick(2007)}>2007</Button>
+              {/* 다른 연도 버튼들 추가 */}
+            </YearContainer>
+          )}
+
+          {/* 선택된 장르와 연도에 따라 GenreResult 컴포넌트 로딩 */}
+          {currentGenre && (
+            <GenreResult
+              key={key}
+              genre={currentGenre}
+              year={selectedYear}
+              sorting={false}
+            />
+          )}
+        </ResultContainer>
+      </Main>
+    </>
   );
 };
 
-export default MoviePage;
+export default SearchPage;
