@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Header from "../layout/Header";
 import Page1 from "./Page1";
 import Footer from "../layout/Footer";
+import { useRouter } from "next/router";
 
 const Main = styled.main`
   position: relative;
@@ -19,6 +20,7 @@ const Main = styled.main`
 const App: React.FC = () => {
   const pageTitle = "영화달 MOONFLIX - 홈";
   const [currentPage, setCurrentPage] = useState("tab1");
+  const router = useRouter();
 
   return (
     <Main>
