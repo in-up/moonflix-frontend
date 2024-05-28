@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import RowInfo from '../layout/RowInfo'; // Corrected import path
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import List from "../layout/List"; // Corrected import path
 
 interface SearchProp {
   word: string;
@@ -92,7 +92,7 @@ const SearchResult: React.FC<SearchProp> = ({ word }) => {
         <>
           <NoResults>{movies.length}개의 영화를 찾았어요.</NoResults>
           {currentMovies.map((movie) => (
-            <RowInfo
+            <List
               key={movie.tmdbId}
               id={movie.tmdbId}
               title={movie.title}

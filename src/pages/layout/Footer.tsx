@@ -23,7 +23,7 @@ const FooterContainer = styled.div`
 const Logo: React.FC = () => {
   return (
     <FooterContainer>
-      <Link href="/license" passHref>
+      <Link href="https://github.com/in-up/moonflix-frontend" passHref>
         <div>
           <Image
             src="/footer3.png"

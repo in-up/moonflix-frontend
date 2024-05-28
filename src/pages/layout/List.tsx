@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Poster from "./Poster"; // Corrected import path
+import Poster from "./PosterItem"; // Corrected import path
 import { useRouter } from "next/router";
 import requests from "../../apis/tmdbRequests";
 import Rating from "./Rating";
@@ -91,7 +91,7 @@ const PosterWrapper = styled.div`
   }
 `;
 
-const RowInfo: React.FC<Movie> = ({
+const List: React.FC<Movie> = ({
   id,
   title,
   poster_path,
@@ -137,7 +137,7 @@ const RowInfo: React.FC<Movie> = ({
           alt={title}
           width={200}
           height={150}
-          isNoUse={true}
+          hovering={false}
         />
       </PosterWrapper>
       <Info>
@@ -156,4 +156,4 @@ const RowInfo: React.FC<Movie> = ({
   );
 };
 
-export default RowInfo;
+export default List;

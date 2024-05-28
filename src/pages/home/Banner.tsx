@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import requests from "../../../apis/requests";
+import requests from "../../apis/requests";
 import styled from "styled-components";
 import { slate, slateA, slateDark, slateDarkA } from "@radix-ui/colors";
 import { useRouter } from "next/router";
-import Rating from "../../layout/Rating";
-import { formatTitle } from "../../../apis/formatTitle";
+import Rating from "../layout/Rating";
+import { formatTitle } from "../../apis/formatTitle";
 
 interface Movie {
   movieId: number;
@@ -21,7 +21,7 @@ interface Movie {
 const BannerWrapper = styled.header<{ imageUrl: string }>`
   color: white;
   object-fit: contain;
-  height: 36rem;
+  height: 48rem;
   background: linear-gradient(
       rgba(0, 0, 0, 0.4),
       rgba(0, 0, 0, 0.2),
@@ -39,8 +39,8 @@ const BannerWrapper = styled.header<{ imageUrl: string }>`
 
 const BannerContents = styled.div`
   margin-left: 10rem;
-  padding-top: 12rem;
-  height: 24rem;
+  padding-top: 20rem;
+  height: 28rem;
   @media (max-width: 768px) {
     margin-left: 2rem;
   }
@@ -170,7 +170,7 @@ const Banner: React.FC = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const res = await fetch(`/api${requests.fetchDQsPick}`);
+      const res = await fetch(`/api${requests.fetchTopMovies}`);
       const data = await res.json();
       const randomIndex = Math.floor(Math.random() * data.result.length);
       setMovie(data.result[randomIndex]);

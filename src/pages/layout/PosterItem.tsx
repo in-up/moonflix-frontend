@@ -11,10 +11,10 @@ interface PosterProps {
   alt: string;
   width: number;
   height: number;
-  isNoUse?: boolean;
+  hovering?: boolean;
 }
 
-const PosterContainer = styled.div<{ isNoUse?: boolean }>`
+const PosterContainer = styled.div<{ hovering?: boolean }>`
   position: relative;
   display: inline-block;
   border-radius: 14px;
@@ -30,32 +30,33 @@ const PosterContainer = styled.div<{ isNoUse?: boolean }>`
 
   border: 3px solid #ffffff00;
   &:hover {
-    border-color: ${({ isNoUse }) => (isNoUse ? "none" : "#fff")};
+    border-color: ${({ hovering }) => (hovering ? "#fff" : "#none")};
   }
 `;
 
-const PosterImage = styled(Image)<{ isNoUse?: boolean }>`
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.3);
-  padding: 0.25rem;
+const PosterImage = styled(Image)<{ hovering?: boolean }>`
 
-  ${(props) =>
-    props.isNoUse &&
-    css`
-      border-radius: 0;
+  border-radius: 0;
       padding: 0px;
       border: 1px solid #ffffff00;
       box-shadow: 0 0 0;
       &:hover {
         border-color: #00000000;
       }
+
+  ${(props) =>
+    props.hovering &&
+    css`
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 0px 20px rgba(0, 0, 0, 0.3);
+      padding: 0.25rem;
     `}
 `;
 
-const TitleOverlay = styled.div`
+const TitleOverlay = styled.div<{ hovering?: boolean }>`
   position: absolute;
-  display: flex;
+  display: ${({ hovering}) => (hovering ? "flex" : "none")};
   align-items: flex-end;
   bottom: 0;
   left: 0;
@@ -82,7 +83,7 @@ const Poster: React.FC<PosterProps> = ({
   alt,
   width,
   height,
-  isNoUse,
+  hovering,
 }) => {
   const router = useRouter();
 
@@ -95,7 +96,7 @@ const Poster: React.FC<PosterProps> = ({
 
   return (
     <PosterContainer
-      isNoUse={isNoUse}
+      hovering={hovering}
       onClick={() => handleClick(id, movieTitle || "")}
     >
       <PosterImage
@@ -105,9 +106,9 @@ const Poster: React.FC<PosterProps> = ({
         height={height}
         style={{ objectFit: "cover" }}
         priority={true}
-        isNoUse={isNoUse}
+        hovering={hovering}
       />
-      <TitleOverlay className="title">{formattedTitle}</TitleOverlay>
+      <TitleOverlay hovering={hovering} className="title">{formattedTitle}</TitleOverlay>
     </PosterContainer>
   );
 };
