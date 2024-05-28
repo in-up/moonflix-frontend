@@ -111,7 +111,7 @@ const ProfilePage: React.FC = () => {
       const user = await isAuthenticated();
       if (!user) {
         alert("로그인이 필요합니다.");
-        router.push("/");
+        router.push("/sign");
       } else {
         setLoading(false);
       }

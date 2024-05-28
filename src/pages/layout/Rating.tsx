@@ -4,11 +4,10 @@ import styled from 'styled-components';
 
 interface RatingProps {
     rating: number;
-    size: number; // 문자열 대신 숫자 값으로 변경
+    size: number;
 }
 
 const RatingImage = styled(Image)`
-    
     overflow: hidden;
 `;
 
@@ -29,7 +28,7 @@ const Rating: React.FC<RatingProps> = ({ rating, size }) => {
         } else if (rating > 2.0) {
             ratingImage = 'm1.png';
         }else {
-            ratingImage = 'star_0.png'; // 기본적으로 no_rating 이미지를 반환하도록 설정
+            ratingImage = 'm4.png';
         }
 
         result = baseUrl+ratingImage;

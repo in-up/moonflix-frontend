@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import styled from "styled-components";
-import Human from '../layout/Human';
+import FigureItem from '../layout/FigureItem';
 import { slate } from "@radix-ui/colors";
 
 interface Actor {
@@ -174,7 +174,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                 <div>
                                     {actors.profile_path ? (
                                         <RowHuman>
-                                            <Human
+                                            <FigureItem
                                                 id={actors.id}
                                                 path={`${base_url}${actors.profile_path}`}
                                                 alt={actors.name}
@@ -185,7 +185,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                         </RowHuman>
                                     ) : (
                                         <RowHuman>
-                                            <Human
+                                            <FigureItem
                                                 id={actors.id}
                                                 path={`${no_image}`}
                                                 alt={actors.name}
@@ -221,7 +221,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                 <div>
                                     {director.profile_path ? (
                                         <RowHuman>
-                                            <Human
+                                            <FigureItem
                                                 id={director.id}
                                                 path={`${base_url}${director.profile_path}`}
                                                 alt={director.name}
@@ -232,7 +232,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
                                         </RowHuman>
                                     ) : (
                                         <RowHuman>
-                                            <Human
+                                            <FigureItem
                                                 id={director.id}
                                                 path={`${no_image}`}
                                                 alt={director.name}

@@ -3,7 +3,6 @@ import Image from "next/image";
 import styled, { keyframes } from "styled-components";
 import { useRouter } from 'next/router';
 
-
 interface HumanProps {
   id: number;
   path: string;
@@ -21,7 +20,6 @@ const borderAnimation = keyframes`
   }
 `;
 
-
 const HumanImage = styled(Image)`
   border-radius: 14px;
   overflow: hidden;
@@ -29,22 +27,20 @@ const HumanImage = styled(Image)`
   border: 3px solid #ffffff00;
   padding: 0.25rem;
   transition: border-color 0.3s ease;
-  /* &:hover {
+  &:hover {
     border-color: #fff;
-  } */
+  }
 `;
 
-const Human: React.FC<HumanProps> = ({ id, path, alt, width, height }) => {
+const FigureItem: React.FC<HumanProps> = ({ id, path, alt, width, height }) => {
   const router = useRouter();
 
-  const handleClick = (movieId: number) => {
-    console.log(movieId);
-    router.push('/movie/' + movieId);
+  const handleClick = (id: number) => {
+    const url = `https://www.themoviedb.org/person/${id}`;
+    window.location.href = url;
   };
 
-
   return (
-
     <HumanImage
       src={path}
       alt={alt}
@@ -52,9 +48,9 @@ const Human: React.FC<HumanProps> = ({ id, path, alt, width, height }) => {
       height={height}
       style={{ objectFit: "cover" }}
       priority={true}
+      onClick={() => handleClick(id)}
     />
-
   );
 };
 
-export default Human;
+export default FigureItem;

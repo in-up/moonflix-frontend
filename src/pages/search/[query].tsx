@@ -105,7 +105,7 @@ const SearchResultPage: React.FC = () => {
       <Head>
         <title>영화달 MOONFLIX - 검색 결과</title>
       </Head>
-      <Header setCurrentPage={() => {}} /> {/* Replace with the actual implementation */}
+      <Header/>
       <Main>
         <SearchContainer>
           <SearchInput

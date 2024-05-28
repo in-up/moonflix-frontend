@@ -142,7 +142,7 @@ const Movie: React.FC = () => {
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <Header setCurrentPage={setCurrentPage} />
+      <Header/>
       <Main>
         <StyledContainer>
           <Backdrop
