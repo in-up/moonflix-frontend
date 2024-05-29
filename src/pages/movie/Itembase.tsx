@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import Poster from "./PosterItem";
+import Poster from "../layout/PosterItem";
 import styled from "styled-components";
 import { slate } from "@radix-ui/colors";
 
@@ -21,6 +21,7 @@ interface RowProps {
 
 const RowWrapper = styled.section`
   color: white;
+  margin: 2rem 0;
 `;
 
 const RowTitle = styled.h2`
@@ -54,10 +55,11 @@ const RowPosters = styled.div`
 
 const RowPoster = styled.div`
   flex-shrink: 0;
-  width: 200px;
+  width: 150px;
   margin-right: 10px;
   transition: transform 450ms;
   border-radius: 4px;
+  text-align: center;
 
   &:hover {
     transform: scale(1.08);
@@ -70,14 +72,26 @@ const RowPoster = styled.div`
   @media screen and (max-width: 768px) {
     max-height: 280px;
   }
+
+  .poster-title {
+    margin: 1rem 0.75rem;
+    font-size: 1rem;
+    color: ${slate.slate1};
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 30vw;
+  }
 `;
 
-const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
+const Itembase: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
   const base_url = "https://image.tmdb.org/t/p/original/";
   const [movies, setMovies] = useState<Movie[]>([]);
   const [slidesPerView, setSlidesPerView] = useState(4);
-  const [imgWidth, setImgWidth] = useState(200);
-  const [imgHeight, setImgHeight] = useState(300);
+  const [imgWidth, setImgWidth] = useState(200); // Default width
+  const [imgHeight, setImgHeight] = useState(300); // Default height
 
   useEffect(() => {
     async function fetchData() {
@@ -96,15 +110,16 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
   useEffect(() => {
     const handleResize = () => {
       if (typeof window !== "undefined") { // Check if window object is available
-        const newImgWidth = window.innerWidth <= 768 ? 150 : 200;
-        const newImgHeight = window.innerWidth <= 768 ? 225 : 300;
+        const newImgWidth = window.innerWidth * 0.6 <= 768 ? 120 : 150;
+        const newImgHeight = window.innerWidth * 0.6 <= 768 ? 180 : 200;
+        
         setImgWidth(newImgWidth);
         setImgHeight(newImgHeight);
 
         const slideWidth = newImgWidth;
         const spaceBetween = 30;
         const screenWidth = window.innerWidth;
-        const slidesPerView = Math.floor(screenWidth / (slideWidth + spaceBetween));
+        const slidesPerView = Math.floor(screenWidth * 0.6 / (slideWidth + spaceBetween));
         setSlidesPerView(slidesPerView);
       }
     };
@@ -119,7 +134,6 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
 
   const handleClick = (movie: Movie) => {
     // Handle click logic here
-
   };
   
   return (
@@ -131,23 +145,23 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
           direction="horizontal"
           spaceBetween={30}
           slidesPerView={slidesPerView}
-          autoplay={true}
-          loop={true}
+          autoplay={false}
+          loop={false}
           navigation={true}
         >
           {movies.map((movie, idx) => (
             <SwiperSlide key={idx}>
               <RowPoster className="row__poster" onClick={() => handleClick(movie)}>
                 <Poster
-                  
-                  id= {movie.tmdbId}
+                  id={movie.tmdbId}
                   movieTitle={movie.title}
                   path={`${base_url}${movie.poster_path}`}
                   alt={movie.title}
                   width={imgWidth}
                   height={imgHeight}
-                  hovering={true}
+                  hovering={false}
                 />
+                <div className="poster-title">{movie.title}</div>
               </RowPoster>
             </SwiperSlide>
           ))}
@@ -157,4 +171,4 @@ const Row: React.FC<RowProps> = ({ title, fetchUrl, id, addRating }) => {
   );
 };
 
-export default Row;
+export default Itembase;

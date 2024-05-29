@@ -1,7 +1,7 @@
 const API_KEY: string = "4c0745192a76ad66b5dc1c5d83c340f0";
 
 interface Requests {
-  fetchDQsPick: string;
+  fetchTopMovies: string;
   fetchActionMovies: string;
   fetchComedyMovies: string;
   fetchHorrorMovies: string;
@@ -24,26 +24,26 @@ interface Requests {
 }
 
 const requests: Requests = {
-  fetchDQsPick: `/all`,
-  fetchActionMovies: `/genres/action`,
-  fetchComedyMovies: `/genres/comedy`,
-  fetchHorrorMovies: `/genres/horror`,
-  fetchRomanceMovies: `/genres/romance`,
-  fetchAdventureMovies: `/genres/adventure`,
-  fetchAnimationMovies: `/genres/animation`,
-  fetchChildrenMovies: `/genres/children`,
-  fetchFantasyMovies: `/genres/fantasy`,
-  fetchCrimeMovies:`/genres/crime`,
-  fetchThrillerMovies: `/genres/thriller`,
-  fetchDramaMovies: `/genres/drama`,
-  fetchWarMovies: `/genres/war`,
-  fetchMysteryMovies: `/genres/mystery`,
-  fetchSciFiMovies: `/genres/scifi`,
-  fetchDocumentaryMovies: `/genres/documentary`,
-  fetchIMAXMovies: `/genres/imax`,
-  fetchFilmNoirMovies: `/genres/filmNoir`,
-  fetchMusicalMovies: `/genres/musical`,
-  fetchWesternMovies: `/genres/western`
+  fetchTopMovies: `/all`,
+  fetchActionMovies: `/genres/Action`,
+  fetchComedyMovies: `/genres/Comedy`,
+  fetchHorrorMovies: `/genres/Horror`,
+  fetchRomanceMovies: `/genres/Romance`,
+  fetchAdventureMovies: `/genres/Adventure`,
+  fetchAnimationMovies: `/genres/Animation`,
+  fetchChildrenMovies: `/genres/Children`,
+  fetchFantasyMovies: `/genres/Fantasy`,
+  fetchCrimeMovies: `/genres/Crime`,
+  fetchThrillerMovies: `/genres/Thriller`,
+  fetchDramaMovies: `/genres/Drama`,
+  fetchWarMovies: `/genres/War`,
+  fetchMysteryMovies: `/genres/Mystery`,
+  fetchSciFiMovies: `/genres/Scifi`,
+  fetchDocumentaryMovies: `/genres/Documentary`,
+  fetchIMAXMovies: `/genres/Imax`,
+  fetchFilmNoirMovies: `/genres/FilmNoir`,
+  fetchMusicalMovies: `/genres/Musical`,
+  fetchWesternMovies: `/genres/Western`,
 };
 
 export default requests;

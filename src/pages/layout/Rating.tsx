@@ -4,32 +4,31 @@ import styled from 'styled-components';
 
 interface RatingProps {
     rating: number;
-    size: number; // 문자열 대신 숫자 값으로 변경
+    size: number;
 }
 
 const RatingImage = styled(Image)`
-    border-radius: 50%;
     overflow: hidden;
 `;
 
 const Rating: React.FC<RatingProps> = ({ rating, size }) => {
     const renderRatingImage = () => {
-        const baseUrl = '/images/rating/';
+        const baseUrl = '/rating/';
         let ratingImage = '';
         let result = '';
 
         if (rating > 8.0) {
-            ratingImage = 'star_100.png';
+            ratingImage = 'm5.png';
         } else if (rating > 7.0) {
-            ratingImage = 'star_90.png';
+            ratingImage = 'm4.png';
         } else if (rating > 6.0) {
-            ratingImage = 'star_80.png';
+            ratingImage = 'm3.png';
         } else if (rating > 4.0) {
-            ratingImage = 'star_70.png';
+            ratingImage = 'm2.png';
         } else if (rating > 2.0) {
-            ratingImage = 'star_60.png';
+            ratingImage = 'm1.png';
         }else {
-            ratingImage = 'star_0.png'; // 기본적으로 no_rating 이미지를 반환하도록 설정
+            ratingImage = 'm4.png';
         }
 
         result = baseUrl+ratingImage;
