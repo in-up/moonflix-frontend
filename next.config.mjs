@@ -8,16 +8,16 @@ const nextConfig = {
   },
   redirects: async () => ([{
       source: '/api/:path*',
-      destination: 'http:localhost:8000/:path*',
+      destination: 'http://3.34.179.94/:path*',
       permanent: false,
   }]),
   images: {
       domains: ["image.tmdb.org"],
   },
   env: {
-      SUPABASE_URL: process.env.SUPABASE_URL,
-      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-      TMDB_API_KEY: process.env.TMDB_API_KEY,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_TMDB_API_KEY: process.env.NEXT_PUBLIC_TMDB_API_KEY,
   },
 };
 

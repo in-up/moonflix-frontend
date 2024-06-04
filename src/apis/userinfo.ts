@@ -1,8 +1,8 @@
 // src/auth/userInfo.ts
 import { createClient, PostgrestResponse, PostgrestError } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.SUPABASE_URL || ''; // 환경변수 설정 필요
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || ''; // 환경변수 설정 필요
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''; // 환경변수 설정 필요
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''; // 환경변수 설정 필요
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface UserMovieStatus {

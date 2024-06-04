@@ -105,7 +105,7 @@ const RatingWord = styled.div`
 const Movie: React.FC = () => {
   const pageTitle = "영화달 MOONFLIX - 영화정보";
   const [currentPage, setCurrentPage] = useState("MovieInfo");
-  const apikey = process.env.TMDB_API_KEY;
+  const apikey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
   const router = useRouter();
   const { id } = router.query;
