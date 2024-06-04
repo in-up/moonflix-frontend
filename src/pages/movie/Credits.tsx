@@ -170,7 +170,7 @@ const Credits: React.FC<CreditsProps> = ({ tmdbId }) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [actor.length, crew.length]);
 
   return (
     <>

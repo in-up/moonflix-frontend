@@ -1,5 +1,5 @@
 const CONFIG = {
-    link: "https://moonflix.vercel.app",
+    link: "https://dalflix.vercel.app",
     lang: "ko"
 }
 

@@ -129,3 +129,5 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ open, setOpen }) => {
     </div>
   );
 };
+
+export default ProfileMenu;

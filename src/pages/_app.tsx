@@ -1,6 +1,6 @@
-import React from 'react';
-import App, { AppProps, AppContext } from 'next/app';
-import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import React from "react";
+import App, { AppProps } from "next/app";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import {
   grayDark,
   slateDark,
@@ -9,7 +9,7 @@ import {
   redDark,
   greenDark,
   whiteA,
-  blackA
+  blackA,
 } from "@radix-ui/colors";
 
 const GlobalStyle = createGlobalStyle`
@@ -33,22 +33,13 @@ const theme = {
   },
 };
 
-class MyApp extends App {
-  static async getInitialProps(appContext: AppContext) {
-    const appProps = await App.getInitialProps(appContext);
-    return { ...appProps };
-  }
-
-  render() {
-    const { Component, pageProps } = this.props;
-
-    return (
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <Component {...pageProps} />
-      </ThemeProvider>
-    );
-  }
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <Component {...pageProps} />
+    </ThemeProvider>
+  );
 }
 
 export default MyApp;
